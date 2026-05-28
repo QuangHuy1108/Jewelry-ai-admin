@@ -9,7 +9,8 @@ import {
   Users,
   Store,
   Box,
-  Sparkles
+  Sparkles,
+  CreditCard
 } from 'lucide-react';
 
 export default function Sidebar({ currentTab, setCurrentTab, onLogout }) {
@@ -24,6 +25,7 @@ export default function Sidebar({ currentTab, setCurrentTab, onLogout }) {
     { id: 'seller-applications', label: 'Seller Applications', icon: Store },
     { id: 'ar-media-hub', label: 'AR & Media Hub', icon: Box },
     { id: 'ai-custom-designs', label: 'AI Custom Designs', icon: Sparkles },
+    { id: 'vendor-financials', label: 'Vendor Financials', icon: CreditCard },
   ];
 
   return (

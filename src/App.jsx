@@ -14,6 +14,7 @@ import SellerApplicationsManager from './components/SellerApplicationsManager';
 import Login from './components/Login';
 import ArMediaHub from './components/ArMediaHub';
 import AiCustomDesigns from './components/AiCustomDesigns';
+import VendorFinancials from './components/VendorFinancials';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('dashboard');
@@ -78,6 +79,8 @@ export default function App() {
         return <ArMediaHub />;
       case 'ai-custom-designs':
         return <AiCustomDesigns />;
+      case 'vendor-financials':
+        return <VendorFinancials />;
       default:
         return <DashboardStats />;
     }
