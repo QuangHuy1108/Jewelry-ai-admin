@@ -2,6 +2,7 @@
 
 :root {
   --bg-base: #0A0A0B; /* Obsidian Black */
+  --bg-main: #0A0A0B; /* Primary background canvas */
   --bg-surface: #111113; /* Deep Obsidian Slate */
   --bg-surface-hover: #1c1c1f;
   --bg-glass: rgba(10, 10, 11, 0.2); /* Opacity 0.2 per Performance Guard Rule */

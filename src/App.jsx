@@ -24,19 +24,29 @@ export default function App() {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        // Verify admin status
-        const adminDoc = await getDoc(doc(db, 'admins', currentUser.uid));
-        if (adminDoc.exists()) {
-          setUser(currentUser);
+      try {
+        if (currentUser) {
+          // Verify admin status
+          const adminDoc = await getDoc(doc(db, 'admins', currentUser.uid));
+          if (adminDoc.exists()) {
+            setUser(currentUser);
+          } else {
+            await signOut(auth);
+            setUser(null);
+          }
         } else {
-          await signOut(auth);
           setUser(null);
         }
-      } else {
+      } catch (err) {
+        console.error("Auth status verification failed: ", err);
+        // Clean safety fallback: sign out and load Login view securely
+        try {
+          await signOut(auth);
+        } catch (_) {}
         setUser(null);
+      } finally {
+        setLoadingAuth(false);
       }
-      setLoadingAuth(false);
     });
 
     return () => unsub();
