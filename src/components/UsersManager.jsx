@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { User, Mail, Calendar, DollarSign, Shield, ShieldAlert, Search } from 'lucide-react';
+import { User, Mail, Calendar, DollarSign, Shield, ShieldAlert, Search, Phone } from 'lucide-react';
 
 export default function UsersManager() {
   const [users, setUsers] = useState([]);
@@ -64,9 +64,9 @@ export default function UsersManager() {
             <tr>
               <th>Customer</th>
               <th>Email Address</th>
-              <th>Registered Timestamp</th>
-              <th>Wallet Balance</th>
-              <th>Role Privilege</th>
+              <th>Phone</th>
+              <th>Registered</th>
+              <th>Role</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -87,13 +87,22 @@ export default function UsersManager() {
                   <tr key={u.id}>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        {u.photoURL || u.image ? (
-                          <img src={u.photoURL || u.image} alt="" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
-                        ) : (
-                          <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-surface-hover)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <User size={18} color="var(--gold-primary)" />
-                          </div>
-                        )}
+                        <div style={{ position: 'relative' }}>
+                          {u.avatar || u.photoURL || u.image ? (
+                            <img src={u.avatar || u.photoURL || u.image} alt="" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                          ) : (
+                            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-surface-hover)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <User size={18} color="var(--gold-primary)" />
+                            </div>
+                          )}
+                          {/* Online indicator dot */}
+                          <span style={{
+                            position: 'absolute', bottom: '0', right: '0',
+                            width: '12px', height: '12px', borderRadius: '50%',
+                            background: u.isOnline ? '#22c55e' : '#6b7280',
+                            border: '2px solid var(--bg-surface)',
+                          }} />
+                        </div>
                         <span style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{u.displayName || u.name || 'Anonymous User'}</span>
                       </div>
                     </td>
@@ -104,20 +113,21 @@ export default function UsersManager() {
                       </div>
                     </td>
                     <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                        <Phone size={14} />
+                        <span>{u.phone || u.phoneNumber || '—'}</span>
+                      </div>
+                    </td>
+                    <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                         <Calendar size={14} />
                         <span>{dateStr}</span>
                       </div>
                     </td>
                     <td>
-                      <span style={{ fontWeight: 'bold', color: bal > 0 ? 'var(--gold-primary)' : 'var(--text-primary)' }}>
-                        ${parseFloat(bal).toFixed(2)}
-                      </span>
-                    </td>
-                    <td>
                       {isAdmin ? (
                         <span className="badge" style={{ background: 'rgba(212, 175, 55, 0.15)', color: 'var(--gold-primary)', border: '1px solid var(--gold-primary)' }}>
-                          <Shield size={12} style={{ display: 'inline', verticalAlign: '-1px', marginRight: '4px' }} /> Administrator
+                          <Shield size={12} style={{ display: 'inline', verticalAlign: '-1px', marginRight: '4px' }} />Administrator
                         </span>
                       ) : (
                         <span className="badge" style={{ background: 'var(--bg-surface-hover)', color: 'var(--text-secondary)' }}>
@@ -126,7 +136,9 @@ export default function UsersManager() {
                       )}
                     </td>
                     <td>
-                      <span className="badge badge-success">Verified Active</span>
+                      <span className={`badge ${u.isOnline ? 'badge-success' : ''}`} style={u.isOnline ? {} : { background: 'var(--bg-surface-hover)', color: 'var(--text-muted)' }}>
+                        {u.isOnline ? '● Online' : `○ Offline${u.lastSeen?.toDate ? ' · ' + u.lastSeen.toDate().toLocaleDateString() : ''}`}
+                      </span>
                     </td>
                   </tr>
                 );

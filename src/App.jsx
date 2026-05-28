@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { auth, db } from './firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import Sidebar from './components/Sidebar';
 import DashboardStats from './components/DashboardStats';
 import ProductsManager from './components/ProductsManager';
@@ -7,9 +10,49 @@ import BannersManager from './components/BannersManager';
 import OrdersManager from './components/OrdersManager';
 import CouponsManager from './components/CouponsManager';
 import UsersManager from './components/UsersManager';
+import SellerApplicationsManager from './components/SellerApplicationsManager';
+import Login from './components/Login';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('dashboard');
+  const [user, setUser] = useState(null);
+  const [loadingAuth, setLoadingAuth] = useState(true);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        // Verify admin status
+        const adminDoc = await getDoc(doc(db, 'admins', currentUser.uid));
+        if (adminDoc.exists()) {
+          setUser(currentUser);
+        } else {
+          await signOut(auth);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+      setLoadingAuth(false);
+    });
+
+    return () => unsub();
+  }, []);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+  };
+
+  if (loadingAuth) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: 'var(--bg-main)', color: 'var(--text-primary)' }}>
+        Loading secure portal...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Login onLoginSuccess={setUser} />;
+  }
 
   const renderContent = () => {
     switch (currentTab) {
@@ -27,6 +70,8 @@ export default function App() {
         return <CouponsManager />;
       case 'users':
         return <UsersManager />;
+      case 'seller-applications':
+        return <SellerApplicationsManager />;
       default:
         return <DashboardStats />;
     }
@@ -34,7 +79,7 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
+      <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} onLogout={handleLogout} />
       <main className="main-content">
         {renderContent()}
       </main>

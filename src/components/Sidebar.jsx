@@ -6,10 +6,11 @@ import {
   Image, 
   ShoppingCart, 
   Tag, 
-  Users 
+  Users,
+  Store
 } from 'lucide-react';
 
-export default function Sidebar({ currentTab, setCurrentTab }) {
+export default function Sidebar({ currentTab, setCurrentTab, onLogout }) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'products', label: 'Products', icon: Package },
@@ -18,10 +19,11 @@ export default function Sidebar({ currentTab, setCurrentTab }) {
     { id: 'orders', label: 'Orders', icon: ShoppingCart },
     { id: 'coupons', label: 'Coupons', icon: Tag },
     { id: 'users', label: 'Users', icon: Users },
+    { id: 'seller-applications', label: 'Seller Applications', icon: Store },
   ];
 
   return (
-    <aside className="sidebar">
+    <aside className="sidebar" style={{ display: 'flex', flexDirection: 'column' }}>
       <div className="sidebar-header">
         <div className="brand-logo-wrapper">
           <span style={{ color: 'var(--gold-primary)', fontWeight: 'bold', fontSize: '1.2rem' }}>✦</span>
@@ -29,7 +31,7 @@ export default function Sidebar({ currentTab, setCurrentTab }) {
         <span className="brand-title">GlowUp Admin</span>
       </div>
 
-      <ul className="nav-list">
+      <ul className="nav-list" style={{ flex: 1 }}>
         {navItems.map((item) => {
           const IconComponent = item.icon;
           const isActive = currentTab === item.id;
@@ -45,6 +47,31 @@ export default function Sidebar({ currentTab, setCurrentTab }) {
           );
         })}
       </ul>
+
+      {onLogout && (
+        <div style={{ padding: '20px' }}>
+          <button
+            onClick={onLogout}
+            style={{
+              width: '100%',
+              padding: '12px',
+              borderRadius: '8px',
+              border: '1px solid rgba(244, 67, 54, 0.3)',
+              background: 'rgba(244, 67, 54, 0.1)',
+              color: '#F44336',
+              fontWeight: '600',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              transition: 'all 0.2s',
+            }}
+          >
+            Logout
+          </button>
+        </div>
+      )}
     </aside>
   );
 }
