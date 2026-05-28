@@ -22,8 +22,10 @@ import {
   Layers, 
   Gem, 
   DollarSign, 
-  Download 
+  Download,
+  Sparkles
 } from 'lucide-react';
+
 
 export default function VendorFinancials() {
   const [activeTab, setActiveTab] = useState('approvalQueue'); // 'approvalQueue' | 'commissionEngine' | 'payoutLedger'
