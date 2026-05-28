@@ -55,13 +55,6 @@ const translations = {
     maintenanceLabel: "System Maintenance Mode",
     maintenanceDesc: "Hides customer mobile app catalogs and displays a luxury notice.",
     
-    // Comparison Card
-    compTitle: "Comparison Audit (daklak vs GlowUp)",
-    compDesc: "A complete list of settings present in admin_daklak_web, reviewed for GlowUp integration.",
-    compBrand: "Branding profiles configured via Settings (names, contact mail, custom favicons).",
-    compSecurity: "Access whitelisting controls (admin IP whitelists and CIDR block lockouts).",
-    compAi: "Third-party AI hyperparameters & prompts configuration panels.",
-    
     // Logout Card
     logoutTitle: "Destruct Session Authorization",
     logoutDesc: "Sign out of your active administrative console and delete temporary web session records.",
@@ -109,13 +102,6 @@ const translations = {
     maintenanceLabel: "Chế độ Bảo trì Hệ thống",
     maintenanceDesc: "Tạm thời đóng danh mục trên app mobile của khách hàng và hiện thông báo bảo trì sang trọng.",
     
-    // Comparison Card
-    compTitle: "Kiểm toán So sánh (daklak vs GlowUp)",
-    compDesc: "Danh sách đầy đủ các thiết lập từ dự án admin_daklak_web được đánh giá để tích hợp sang GlowUp.",
-    compBrand: "Cấu hình thương hiệu thông qua Settings (tên, email hỗ trợ, favicon tùy chỉnh).",
-    compSecurity: "Kiểm soát danh sách IP truy cập được phép (chặn IP lạ bên ngoài hệ thống).",
-    compAi: "Bảng cấu hình tham số AI & từ khóa prompt cho chatbot thế hệ mới.",
-    
     // Logout Card
     logoutTitle: "Hủy ủy quyền phiên làm việc",
     logoutDesc: "Đăng xuất khỏi tài khoản quản trị viên và xóa sạch lịch sử phiên làm việc tạm thời trên web.",
@@ -123,66 +109,12 @@ const translations = {
     
     // General Alerts
     saveAlert: "Cấu hình hệ thống được cập nhật thành công!"
-  },
-  fr: {
-    title: "Paramètres du Système",
-    subtitle: "Personnalisez les paramètres visuels, la langue, la sécurité et la sauvegarde des données",
-    tabInterface: "Interface & Esthétique",
-    tabLocalization: "Langue & Région",
-    tabSystem: "Système & Sauvegarde",
-    
-    // Interface Customizer
-    brightnessTitle: "Luminosité & Densité Visuelle",
-    brightnessSubtitle: "Modifiez la luminosité globale du canevas tout en conservant les bordures Or Champagne",
-    presetObsidian: "Obsidian Sombre",
-    presetObsidianDesc: "Noir AMOLED #0A0A0B",
-    presetDim: "Mystique Sombre",
-    presetDimDesc: "Charbon Ardoise #131316",
-    presetSolar: "Lumière Solaire",
-    presetSolarDesc: "Ivoire Contraste #FAF9F6",
-    
-    glassTitle: "Flou de Transparence (Glassmorphism)",
-    glassSubtitle: "Ajustez le flou d'arrière-plan de la barre latérale et des modales. Restez sous 12px pour préserver le GPU.",
-    glassWarning: "⚠️ Un flou supérieur à 12px dépasse les règles de performance GPU et peut ralentir les appareils anciens.",
-    
-    fontScaleTitle: "Taille de Police du Système",
-    fontScaleSubtitle: "Ajustez la taille du texte de manière dynamique sur l'ensemble de l'interface.",
-    
-    // Localization Settings
-    langTitle: "Sélecteur de Langue",
-    langSubtitle: "Définissez la langue du panneau de contrôle global. Mise à jour instantanée.",
-    langSelect: "Choisissez votre Langue Préférée",
-    
-    // Advanced System Settings
-    sysTitle: "Drapeaux Opérationnels Avancés",
-    sysSubtitle: "Gerez les tâches automatisées, le verrouillage de session inactif et la maintenance.",
-    backupLabel: "Sauvegarde Quotidienne Firestore",
-    backupDesc: "Active les copies de base de données automatiques toutes les nuits.",
-    timeoutLabel: "Minuteur de Verrouillage Inactif",
-    timeoutDesc: "Déclenche une déconnexion automatique sécurisée en cas d'inactivité.",
-    maintenanceLabel: "Mode de Maintenance du Système",
-    maintenanceDesc: "Désactive temporairement les catalogues mobiles et affiche un message élégant.",
-    
-    // Comparison Card
-    compTitle: "Audit Comparatif (daklak vs GlowUp)",
-    compDesc: "Une liste complète des paramètres présents dans admin_daklak_web, revus pour l'intégration GlowUp.",
-    compBrand: "Configuration de la marque via l'interface (noms, emails, icônes personnalisées).",
-    compSecurity: "Contrôles de sécurité avancés (listes blanches d'IP et restrictions d'accès).",
-    compAi: "Panneaux de contrôle des hyperparamètres d'IA et invites de prompt personnalisées.",
-    
-    // Logout Card
-    logoutTitle: "Détruire l'autorisation de session",
-    logoutDesc: "Déconnectez votre session administrative et effacez tous les jetons de connexion temporaires.",
-    logoutBtn: "Résilier la Session Active",
-    
-    // General Alerts
-    saveAlert: "Configurations système mises à jour avec succès!"
   }
 };
 
-export default function Settings({ onLogout }) {
+
+export default function Settings({ onLogout, locale, onLocaleChange }) {
   const [activeTab, setActiveTab] = useState('interface'); // 'interface' | 'localization' | 'system'
-  const [locale, setLocale] = useState(() => localStorage.getItem('glowup_admin_locale') || 'en');
   const [brightness, setBrightness] = useState(() => localStorage.getItem('glowup_admin_brightness') || 'obsidian');
   const [glassBlur, setGlassBlur] = useState(() => parseInt(localStorage.getItem('glowup_admin_glassblur')) || 12);
   const [fontScale, setFontScale] = useState(() => parseInt(localStorage.getItem('glowup_admin_fontscale')) || 14);
@@ -250,8 +182,7 @@ export default function Settings({ onLogout }) {
 
   // --- Language Change Handler ---
   const handleLocaleChange = (newLocale) => {
-    setLocale(newLocale);
-    localStorage.setItem('glowup_admin_locale', newLocale);
+    onLocaleChange(newLocale);
   };
 
   return (
@@ -425,8 +356,7 @@ export default function Settings({ onLogout }) {
                 <div style={{ display: 'flex', gap: '10px' }}>
                   {[
                     { id: 'en', label: 'English (EN)' },
-                    { id: 'vi', label: 'Tiếng Việt (VI)' },
-                    { id: 'fr', label: 'Français (FR)' }
+                    { id: 'vi', label: 'Tiếng Việt (VI)' }
                   ].map(lang => {
                     const isSelected = locale === lang.id;
                     return (
@@ -521,36 +451,6 @@ export default function Settings({ onLogout }) {
                 >
                   {maintenanceMode ? <ToggleRight size={44} /> : <ToggleLeft size={44} style={{ opacity: 0.3 }} />}
                 </button>
-              </div>
-            </div>
-
-            {/* Comparison Audit List (Referencing daklak vs GlowUp) */}
-            <div className="glass-panel">
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '6px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <HelpCircle size={18} color="var(--gold-primary)" />
-                {t.compTitle}
-              </h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '16px' }}>{t.compDesc}</p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {[
-                  { title: "AI Hyperparameter Controls", desc: t.compAi },
-                  { title: "Security Whitelisting Tools", desc: t.compSecurity },
-                  { title: "Global Branding Profiles", desc: t.compBrand }
-                ].map((item, idx) => (
-                  <div 
-                    key={idx} 
-                    style={{ 
-                      padding: '12px 16px', 
-                      borderRadius: '8px', 
-                      background: 'rgba(0,0,0,0.15)', 
-                      border: '1px solid rgba(255,255,255,0.03)' 
-                    }}
-                  >
-                    <h4 style={{ fontSize: '0.875rem', fontWeight: '700', color: 'var(--gold-primary)' }}>{item.title}</h4>
-                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>{item.desc}</p>
-                  </div>
-                ))}
               </div>
             </div>
 

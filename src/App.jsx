@@ -21,8 +21,16 @@ import Settings from './components/Settings';
 export default function App() {
 
   const [currentTab, setCurrentTab] = useState('dashboard');
+  const [locale, setLocale] = useState(() => localStorage.getItem('glowup_admin_locale') || 'en');
+
+  const handleLocaleChange = (newLocale) => {
+    setLocale(newLocale);
+    localStorage.setItem('glowup_admin_locale', newLocale);
+  };
+
   const [user, setUser] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
+
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (currentUser) => {
@@ -89,23 +97,23 @@ export default function App() {
       case 'seller-applications':
         return <SellerApplicationsManager />;
       case 'ar-media-hub':
-        return <ArMediaHub />;
+        return <ArMediaHub locale={locale} />;
       case 'ai-custom-designs':
-        return <AiCustomDesigns />;
+        return <AiCustomDesigns locale={locale} />;
       case 'vendor-financials':
-        return <VendorFinancials />;
+        return <VendorFinancials locale={locale} />;
       case 'live-support':
-        return <LiveSupport />;
+        return <LiveSupport locale={locale} />;
       case 'settings':
-        return <Settings onLogout={handleLogout} />;
+        return <Settings onLogout={handleLogout} locale={locale} onLocaleChange={handleLocaleChange} />;
       default:
-        return <DashboardStats />;
+        return <DashboardStats locale={locale} />;
     }
   };
 
   return (
     <div className="app-container">
-      <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
+      <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} locale={locale} />
       <main className="main-content">
         {renderContent()}
       </main>

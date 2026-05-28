@@ -15,22 +15,58 @@ import {
   Settings
 } from 'lucide-react';
 
-export default function Sidebar({ currentTab, setCurrentTab }) {
+const sidebarTranslations = {
+  en: {
+    dashboard: "Dashboard",
+    products: "Products",
+    categories: "Categories",
+    banners: "Banners",
+    orders: "Orders",
+    coupons: "Coupons",
+    users: "Users",
+    sellerApplications: "Seller Applications",
+    arMediaHub: "AR & Media Hub",
+    aiCustomDesigns: "AI Custom Designs",
+    vendorFinancials: "Vendor Financials",
+    liveSupport: "Live Chat & Telemetry",
+    settings: "Settings"
+  },
+  vi: {
+    dashboard: "Bảng Điều Khiển",
+    products: "Sản Phẩm",
+    categories: "Danh Mục",
+    banners: "Banners Quảng Cáo",
+    orders: "Đơn Hàng",
+    coupons: "Mã Giảm Giá",
+    users: "Người Dùng",
+    sellerApplications: "Đăng Ký Đối Tác",
+    arMediaHub: "Trung Tâm AR & 3D",
+    aiCustomDesigns: "Thiết Kế AI Khách Hàng",
+    vendorFinancials: "Tài Chính Đối Tác",
+    liveSupport: "Hỗ Trợ & Đo Lường",
+    settings: "Thiết Lập"
+  }
+};
+
+export default function Sidebar({ currentTab, setCurrentTab, locale = 'en' }) {
+  const t = sidebarTranslations[locale] || sidebarTranslations.en;
+  
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'products', label: 'Products', icon: Package },
-    { id: 'categories', label: 'Categories', icon: Layers },
-    { id: 'banners', label: 'Banners', icon: Image },
-    { id: 'orders', label: 'Orders', icon: ShoppingCart },
-    { id: 'coupons', label: 'Coupons', icon: Tag },
-    { id: 'users', label: 'Users', icon: Users },
-    { id: 'seller-applications', label: 'Seller Applications', icon: Store },
-    { id: 'ar-media-hub', label: 'AR & Media Hub', icon: Box },
-    { id: 'ai-custom-designs', label: 'AI Custom Designs', icon: Sparkles },
-    { id: 'vendor-financials', label: 'Vendor Financials', icon: CreditCard },
-    { id: 'live-support', label: 'Live Chat & Telemetry', icon: MessageSquare },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'dashboard', label: t.dashboard, icon: LayoutDashboard },
+    { id: 'products', label: t.products, icon: Package },
+    { id: 'categories', label: t.categories, icon: Layers },
+    { id: 'banners', label: t.banners, icon: Image },
+    { id: 'orders', label: t.orders, icon: ShoppingCart },
+    { id: 'coupons', label: t.coupons, icon: Tag },
+    { id: 'users', label: t.users, icon: Users },
+    { id: 'seller-applications', label: t.sellerApplications, icon: Store },
+    { id: 'ar-media-hub', label: t.arMediaHub, icon: Box },
+    { id: 'ai-custom-designs', label: t.aiCustomDesigns, icon: Sparkles },
+    { id: 'vendor-financials', label: t.vendorFinancials, icon: CreditCard },
+    { id: 'live-support', label: t.liveSupport, icon: MessageSquare },
+    { id: 'settings', label: t.settings, icon: Settings },
   ];
+
 
   return (
     <aside className="sidebar" style={{ display: 'flex', flexDirection: 'column' }}>
