@@ -583,12 +583,12 @@ export default function LiveSupport({ locale = 'en' }) {
                           {/* Bubble Container */}
                           <div style={{
                             background: isCustomer 
-                              ? '#1c1c1f' 
+                              ? 'var(--bg-surface-hover)' 
                               : isAi 
                                 ? 'rgba(59,130,246,0.08)' 
                                 : 'rgba(212,175,55,0.1)',
                             border: isCustomer
-                              ? '1px solid rgba(255,255,255,0.03)'
+                              ? '1px solid var(--border-color)'
                               : isAi
                                 ? '1px solid rgba(59,130,246,0.2)'
                                 : '1px solid var(--border-color-hover)',
@@ -602,8 +602,8 @@ export default function LiveSupport({ locale = 'en' }) {
                           </div>
                           
                           {/* Timestamp and Sender metadata */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                            <span style={{ fontWeight: '600', color: isCustomer ? 'var(--text-muted)' : isAi ? 'var(--accent-blue)' : 'var(--gold-primary)' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                            <span style={{ fontWeight: '600', color: isCustomer ? 'var(--text-secondary)' : isAi ? 'var(--accent-blue)' : 'var(--gold-primary)' }}>
                               {isCustomer ? t.chatRoleClient : isAi ? t.chatRoleAi : t.chatRoleAgent}
                             </span>
                             <span>·</span>
