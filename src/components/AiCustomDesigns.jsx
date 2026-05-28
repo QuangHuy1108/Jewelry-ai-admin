@@ -237,128 +237,14 @@ export default function AiCustomDesigns() {
             </div>
           ) : (
             filteredDesigns.map(design => (
-              <div 
+              <DesignCard 
                 key={design.id} 
-                className="glass-panel" 
-                style={{ 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  justifyContent: 'space-between',
-                  border: '1px solid rgba(212,175,55,0.12)',
-                  overflow: 'hidden',
-                  padding: 0
-                }}
-              >
-                {/* AI Render Image Canvas */}
-                <div style={{ position: 'relative', width: '100%', height: '240px', background: '#0D0D0E', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                  {design.imageUrl ? (
-                    <img 
-                      src={design.imageUrl} 
-                      alt="AI Jewelry Design" 
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                      onError={(e) => {
-                        // Null-safety visual fallback if image fails to resolve
-                        e.target.style.display = 'none';
-                        e.target.parentNode.style.display = 'flex';
-                        e.target.parentNode.style.alignItems = 'center';
-                        e.target.parentNode.style.justifyContent = 'center';
-                      }}
-                    />
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
-                      <Sparkles size={32} style={{ marginBottom: '8px', opacity: 0.4 }} />
-                      <span style={{ fontSize: '0.8rem' }}>AI Render Pending...</span>
-                    </div>
-                  )}
-
-                  {/* Status Overlay */}
-                  <div style={{ position: 'absolute', top: '16px', left: '16px' }}>
-                    {getStatusBadge(design.status)}
-                  </div>
-                </div>
-
-                {/* Card Context */}
-                <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                  <div>
-                    {/* Customer Meta */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
-                        <User size={14} />
-                        <span style={{ fontWeight: '500' }}>{design.customerEmail}</span>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
-                        <Clock size={12} />
-                        <span>{formatTimestamp(design.createdAt)}</span>
-                      </div>
-                    </div>
-
-                    {/* Generative Prompt Details */}
-                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.03)', marginBottom: '16px' }}>
-                      <p style={{ fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <Sparkles size={10} /> Client Prompt
-                      </p>
-                      <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', italic: 'true', lineHeight: '1.4', fontStyle: 'italic' }}>
-                        "{design.prompt}"
-                      </p>
-                    </div>
-
-                    {/* Material Specs */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '20px' }}>
-                      <Gem size={15} color="var(--gold-primary)" style={{ marginTop: '2px', flexShrink: 0 }} />
-                      <div>
-                        <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Selected Composition</p>
-                        <p style={{ fontSize: '0.825rem', color: 'var(--text-primary)', marginTop: '2px', fontWeight: '500' }}>{design.material}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Operational Switch Actions */}
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '16px', display: 'flex', gap: '8px' }}>
-                    {design.status === 'Created' && (
-                      <button
-                        disabled={processingId === design.id}
-                        onClick={() => updateDesignStatus(design.id, 'Manufacturability Review')}
-                        className="btn btn-primary"
-                        style={{ flex: 1, padding: '10px', fontSize: '0.85rem', justifyContent: 'center' }}
-                      >
-                        <Hammer size={14} style={{ marginRight: '6px' }} />
-                        <span>Feasibility Review</span>
-                      </button>
-                    )}
-
-                    {design.status === 'Manufacturability Review' && (
-                      <>
-                        <button
-                          disabled={processingId === design.id}
-                          onClick={() => updateDesignStatus(design.id, 'Feasibility Approved')}
-                          className="btn"
-                          style={{ flex: 1, padding: '10px', fontSize: '0.85rem', background: 'rgba(76,175,80,0.12)', color: '#4CAF50', border: '1px solid rgba(76,175,80,0.3)', justifyContent: 'center' }}
-                        >
-                          <CheckCircle size={14} style={{ marginRight: '4px' }} /> Approve Casting
-                        </button>
-                        <button
-                          disabled={processingId === design.id}
-                          onClick={() => updateDesignStatus(design.id, 'Rejected')}
-                          className="btn"
-                          style={{ padding: '10px 14px', fontSize: '0.85rem', background: 'rgba(244,67,54,0.12)', color: '#F44336', border: '1px solid rgba(244,67,54,0.3)', justifyContent: 'center' }}
-                        >
-                          Reject
-                        </button>
-                      </>
-                    )}
-
-                    {(design.status === 'Feasibility Approved' || design.status === 'Rejected') && (
-                      <button
-                        onClick={() => updateDesignStatus(design.id, 'Created')}
-                        className="btn btn-secondary"
-                        style={{ flex: 1, padding: '10px', fontSize: '0.85rem', justifyContent: 'center' }}
-                      >
-                        Reset Workflow
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
+                design={design}
+                processingId={processingId}
+                updateDesignStatus={updateDesignStatus}
+                formatTimestamp={formatTimestamp}
+                getStatusBadge={getStatusBadge}
+              />
             ))
           )}
         </div>
@@ -366,3 +252,135 @@ export default function AiCustomDesigns() {
     </div>
   );
 }
+
+// --- High-Performance Optimized Sub-Component (Web Equivalent of Flutter's RepaintBoundary) ---
+const DesignCard = React.memo(({ design, processingId, updateDesignStatus, formatTimestamp, getStatusBadge }) => {
+  return (
+    <div 
+      className="glass-panel" 
+      style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justifyContent: 'space-between',
+        border: '1px solid rgba(212,175,55,0.12)',
+        overflow: 'hidden',
+        padding: 0,
+        contentVisibility: 'auto', // Dynamic Paint Guard: Prevents paint operations for off-screen list elements
+        containIntrinsicSize: '0 450px', // Allocates browser geometry reservation
+        willChange: 'transform' // GPU Layer Compositing: Forces independent graphic redraw buffer (RepaintBoundary equivalent)
+      }}
+    >
+      {/* AI Render Image Canvas */}
+      <div style={{ position: 'relative', width: '100%', height: '240px', background: '#0D0D0E', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+        {design.imageUrl ? (
+          <img 
+            src={design.imageUrl} 
+            alt="AI Jewelry Design" 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.parentNode.style.display = 'flex';
+              e.target.parentNode.style.alignItems = 'center';
+              e.target.parentNode.style.justifyContent = 'center';
+            }}
+          />
+        ) : (
+          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+            <Sparkles size={32} style={{ marginBottom: '8px', opacity: 0.4 }} />
+            <span style={{ fontSize: '0.8rem' }}>AI Render Pending...</span>
+          </div>
+        )}
+
+        {/* Status Overlay */}
+        <div style={{ position: 'absolute', top: '16px', left: '16px' }}>
+          {getStatusBadge(design.status)}
+        </div>
+      </div>
+
+      {/* Card Context */}
+      <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div>
+          {/* Customer Meta */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
+              <User size={14} />
+              <span style={{ fontWeight: '500' }}>{design.customerEmail}</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
+              <Clock size={12} />
+              <span>{formatTimestamp(design.createdAt)}</span>
+            </div>
+          </div>
+
+          {/* Generative Prompt Details */}
+          <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.03)', marginBottom: '16px' }}>
+            <p style={{ fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <Sparkles size={10} /> Client Prompt
+            </p>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', lineHeight: '1.4', fontStyle: 'italic' }}>
+              "{design.prompt}"
+            </p>
+          </div>
+
+          {/* Material Specs */}
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '20px' }}>
+            <Gem size={15} color="var(--gold-primary)" style={{ marginTop: '2px', flexShrink: 0 }} />
+            <div>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Selected Composition</p>
+              <p style={{ fontSize: '0.825rem', color: 'var(--text-primary)', marginTop: '2px', fontWeight: '500' }}>{design.material}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Operational Switch Actions */}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '16px', display: 'flex', gap: '8px' }}>
+          {design.status === 'Created' && (
+            <button
+              disabled={processingId === design.id}
+              onClick={() => updateDesignStatus(design.id, 'Manufacturability Review')}
+              className="btn btn-primary"
+              style={{ flex: 1, padding: '10px', fontSize: '0.85rem', justifyContent: 'center' }}
+            >
+              <Hammer size={14} style={{ marginRight: '6px' }} />
+              <span>Feasibility Review</span>
+            </button>
+          )}
+
+          {design.status === 'Manufacturability Review' && (
+            <>
+              <button
+                disabled={processingId === design.id}
+                onClick={() => updateDesignStatus(design.id, 'Feasibility Approved')}
+                className="btn"
+                style={{ flex: 1, padding: '10px', fontSize: '0.85rem', background: 'rgba(76,175,80,0.12)', color: '#4CAF50', border: '1px solid rgba(76,175,80,0.3)', justifyContent: 'center' }}
+              >
+                <CheckCircle size={14} style={{ marginRight: '4px' }} /> Approve Casting
+              </button>
+              <button
+                disabled={processingId === design.id}
+                onClick={() => updateDesignStatus(design.id, 'Rejected')}
+                className="btn"
+                style={{ padding: '10px 14px', fontSize: '0.85rem', background: 'rgba(244,67,54,0.12)', color: '#F44336', border: '1px solid rgba(244,67,54,0.3)', justifyContent: 'center' }}
+              >
+                Reject
+              </button>
+            </>
+          )}
+
+          {(design.status === 'Feasibility Approved' || design.status === 'Rejected') && (
+            <button
+              onClick={() => updateDesignStatus(design.id, 'Created')}
+              className="btn btn-secondary"
+              style={{ flex: 1, padding: '10px', fontSize: '0.85rem', justifyContent: 'center' }}
+            >
+              Reset Workflow
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+});
+
+// Set display name for react devtools
+DesignCard.displayName = 'DesignCard';
