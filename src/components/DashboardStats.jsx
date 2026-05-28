@@ -190,7 +190,7 @@ export default function DashboardStats({ locale = 'en' }) {
     if (active && payload && payload.length) {
       return (
         <div style={{
-          background: '#0A0A0B',
+          background: 'var(--bg-surface)',
           border: '1px solid var(--border-color-hover)',
           borderRadius: '12px',
           padding: '16px',

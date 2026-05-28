@@ -26,11 +26,9 @@ const translations = {
     // Interface Customizer
     brightnessTitle: "Aesthetic Brightness & Density",
     brightnessSubtitle: "Swap context luminance preset variables while preserving Champagne Gold accents",
-    presetObsidian: "Deep Obsidian",
-    presetObsidianDesc: "AMOLED Black #0A0A0B",
-    presetDim: "Mystic Dim",
-    presetDimDesc: "Carbon Slate #131316",
-    presetSolar: "Solar Light",
+    presetObsidian: "Dark Theme",
+    presetObsidianDesc: "Obsidian Black #0A0A0B",
+    presetSolar: "Light Theme",
     presetSolarDesc: "Ivory Contrast #FAF9F6",
     
     glassTitle: "Backdrop Glassmorphism Blur",
@@ -73,12 +71,10 @@ const translations = {
     // Interface Customizer
     brightnessTitle: "Độ sáng & Mật độ Giao diện",
     brightnessSubtitle: "Thay đổi mức độ sáng tối của hệ thống nhưng vẫn giữ nguyên đường nét Vàng Champagne",
-    presetObsidian: "Obsidian Siêu tối",
-    presetObsidianDesc: "AMOLED Đen sâu #0A0A0B",
-    presetDim: "Mờ ảo Huyền bí",
-    presetDimDesc: "Đen Slate Carbon #131316",
-    presetSolar: "Ánh sáng Thái dương",
-    presetSolarDesc: "Trắng ngà Tương phản #FAF9F6",
+    presetObsidian: "Giao diện Tối",
+    presetObsidianDesc: "Obsidian Đen sâu #0A0A0B",
+    presetSolar: "Giao diện Sáng",
+    presetSolarDesc: "Trắng ngà tương phản #FAF9F6",
     
     glassTitle: "Độ mờ Kính mờ (Backdrop Blur)",
     glassSubtitle: "Tinh chỉnh độ mờ nền của sidebar và modals. Giữ dưới 12px để bảo vệ hiệu năng đồ họa.",
@@ -115,7 +111,11 @@ const translations = {
 
 export default function Settings({ onLogout, locale, onLocaleChange }) {
   const [activeTab, setActiveTab] = useState('interface'); // 'interface' | 'localization' | 'system'
-  const [brightness, setBrightness] = useState(() => localStorage.getItem('glowup_admin_brightness') || 'obsidian');
+  const [brightness, setBrightness] = useState(() => {
+    const saved = localStorage.getItem('glowup_admin_brightness');
+    if (saved === 'solar') return 'solar';
+    return 'obsidian';
+  });
   const [glassBlur, setGlassBlur] = useState(() => parseInt(localStorage.getItem('glowup_admin_glassblur')) || 12);
   const [fontScale, setFontScale] = useState(() => parseInt(localStorage.getItem('glowup_admin_fontscale')) || 14);
   
@@ -140,15 +140,6 @@ export default function Settings({ onLogout, locale, onLocaleChange }) {
       root.style.setProperty('--text-secondary', '#a1a1aa');
       root.style.setProperty('--text-muted', '#52525b');
       root.style.setProperty('--border-color', 'rgba(212, 175, 55, 0.12)');
-    } else if (brightness === 'dim') {
-      root.style.setProperty('--bg-base', '#131316');
-      root.style.setProperty('--bg-main', '#131316');
-      root.style.setProperty('--bg-surface', '#1a1a20');
-      root.style.setProperty('--bg-surface-hover', '#262630');
-      root.style.setProperty('--text-primary', '#dcdcdc');
-      root.style.setProperty('--text-secondary', '#9ca3af');
-      root.style.setProperty('--text-muted', '#6b7280');
-      root.style.setProperty('--border-color', 'rgba(212, 175, 55, 0.18)');
     } else if (brightness === 'solar') {
       root.style.setProperty('--bg-base', '#FAF9F6');
       root.style.setProperty('--bg-main', '#FAF9F6');
@@ -247,7 +238,6 @@ export default function Settings({ onLogout, locale, onLocaleChange }) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
                 {[
                   { id: 'obsidian', label: t.presetObsidian, desc: t.presetObsidianDesc, color: '#0A0A0B' },
-                  { id: 'dim', label: t.presetDim, desc: t.presetDimDesc, color: '#131316' },
                   { id: 'solar', label: t.presetSolar, desc: t.presetSolarDesc, color: '#FAF9F6' }
                 ].map(p => {
                   const isSelected = brightness === p.id;

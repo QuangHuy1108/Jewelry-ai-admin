@@ -97,7 +97,7 @@ h1, h2, h3, h4, h5, h6, .page-title, .brand-title, .modal-title {
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #1c1c1f, #0A0A0B);
+  background: var(--bg-surface);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,7 +108,7 @@ h1, h2, h3, h4, h5, h6, .page-title, .brand-title, .modal-title {
 .brand-title {
   font-size: 1.25rem;
   font-weight: 700;
-  background: linear-gradient(to right, #ffffff, var(--gold-primary));
+  background: linear-gradient(to right, var(--text-primary), var(--gold-primary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -155,11 +155,11 @@ h1, h2, h3, h4, h5, h6, .page-title, .brand-title, .modal-title {
 
 /* Obsidian Content Panels (Performance Guard Rule: Solid Obsidian, no backdrop-filter to prevent GPU lag) */
 .glass-panel {
-  background: #0A0A0B; /* Solid Obsidian Canvas */
+  background: var(--bg-surface); /* Dynamic theme-based background */
   border: 1px solid var(--border-color); /* Thin Gold Hairline */
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -245,7 +245,7 @@ h1, h2, h3, h4, h5, h6, .page-title, .brand-title, .modal-title {
 }
 
 .btn-secondary:hover {
-  background: #2a2a30;
+  background: var(--bg-surface);
   border-color: var(--text-secondary);
 }
 
@@ -299,7 +299,7 @@ h1, h2, h3, h4, h5, h6, .page-title, .brand-title, .modal-title {
 }
 
 .rich-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-surface-hover);
 }
 
 /* Status Badges */
@@ -354,7 +354,7 @@ h1, h2, h3, h4, h5, h6, .page-title, .brand-title, .modal-title {
 }
 
 .modal-content {
-  background: rgba(17, 17, 19, 0.85); /* Performance Guard Rule: Glassmorphism strictly allowed on dialog boxes */
+  background: var(--bg-surface); /* Dynamic theme-based background */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color-hover);
@@ -364,7 +364,7 @@ h1, h2, h3, h4, h5, h6, .page-title, .brand-title, .modal-title {
   max-height: 90vh;
   overflow-y: auto;
   padding: 32px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
   position: relative;
   animation: modalEnter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
