@@ -22,6 +22,21 @@ const translations = {
     tabInterface: "Interface & Aesthetics",
     tabLocalization: "Language & Locale",
     tabSystem: "Advanced System & Backups",
+    tabGuide: "Admin User Guide",
+    
+    // User Guide Content
+    guideHeader: "GlowUp Admin Operations Manual",
+    guideSub: "Comprehensive operational guidebook for catalog assets, generative studio, commission sheets, and override consoles",
+    secOverviewTitle: "1. Aesthetic & Presets Console",
+    secOverviewDesc: "Consolidated system-wide themes let you switch between Obsidian AMOLED Dark and Solar Light modes instantly. Fine-tune backdrop glassmorphism blur and font sizes dynamically. Always keep sidebar blur under 12px to adhere to the Performance Guard Rule.",
+    secArTitle: "2. 3D AR & AI Studio",
+    secArDesc: "Manage 3D jewelry assets (.gltf/.glb meshes) for real-time mobile try-ons. Always register spatial coordinates (X, Y, Z offsets), scale, and rotation. Simulates Draco mesh compression for an 87% bandwidth saving on mobile. Generate luxury background assets using designer presets (Champagne Silk, white marble). Use the swipe divider widget to sweeps before/after comparisons.",
+    secAiTitle: "3. AI Design Feasibility",
+    secAiDesc: "Reviews customer-generated custom jewelry designs. Features detail drawers with client emails, prompt keywords, and metal compositions. Move designs through feasibility review lifecycles: 'Created' ➔ 'Feasibility Approved' (sends to casting pipeline) or 'Unfeasible'. Contains fallback boundaries for missing catalog values.",
+    secFinanceTitle: "4. Partner Finances & Commission Sheets",
+    secFinanceDesc: "Approve or reject vendor listing proposals. Admins can inspect purity (14K/18K), carat weights, and GIA certificate details. Configures Category Commission Rates for Silver, Gold, Diamonds, and AI Studio which securely overwrite configurations to Cloud Firestore. Compute seller ledgers accurately ([Gross] - [Commission] = [Net]) and export formatted bank transfer CSV sheets.",
+    secChatTitle: "5. Chat Takeover & Gemini Telemetry",
+    secChatDesc: "Monitors active mobile AI chat rooms. Shopping carts exceeding $1,500 trigger a high-ticket gold glowing alarm and audible chime notifications using the Web Audio API. Click 'Takeover Live Chat' to override the AI agent and close high-value sales directly. Telemetry dashboard tracks Gemini latency traces (ai_stylist_analysis_trace) and rate-limit congestion spikes.",
     
     // Interface Customizer
     brightnessTitle: "Aesthetic Brightness & Density",
@@ -67,6 +82,21 @@ const translations = {
     tabInterface: "Giao diện & Thẩm mỹ",
     tabLocalization: "Ngôn ngữ & Vùng miền",
     tabSystem: "Cấu hình & Sao lưu Nâng cao",
+    tabGuide: "Hướng Dẫn Quản Trị",
+    
+    // User Guide Content
+    guideHeader: "Cẩm Nang Vận Hành GlowUp Admin",
+    guideSub: "Tài liệu hướng dẫn vận hành toàn diện cho danh mục sản phẩm, phòng thiết kế AI, đối soát tài chính và can thiệp trò chuyện trực tuyến",
+    secOverviewTitle: "1. Tùy biến Giao diện & Thẩm mỹ",
+    secOverviewDesc: "Hệ thống hỗ trợ chuyển đổi giao diện động giữa Giao diện Tối Obsidian AMOLED và Giao diện Sáng Trắng ngà Solar. Tinh chỉnh độ mờ kính mờ (backdrop blur) và cỡ chữ linh hoạt. Khuyến nghị giữ độ mờ dưới 12px để đáp ứng Quy tắc hiệu năng đồ họa GPU.",
+    secArTitle: "2. Trung tâm AR 3D & AI Studio",
+    secArDesc: "Quản lý tệp mô hình 3D (.gltf/.glb) cho tính năng thử đồ ảo trên app di động. Xác lập tọa độ neo giải phẫu (Nhẫn neo ở Ngón tay, Khuyên tai neo ở Tai, Vòng cổ neo ở Cổ) kèm tỷ lệ scale, yaw. Trình mô phỏng nén Draco giúp giảm 87% băng thông. Sử dụng AI Studio để tạo nền ảnh nghệ thuật (Lụa Champagne, Bệ đá Carrara) và kéo thanh sweeps để so sánh ảnh trước/sau.",
+    secAiTitle: "3. Thẩm định Thiết kế AI",
+    secAiDesc: "Theo dõi và thẩm định ý tưởng trang sức do khách hàng tự tạo trên app. Hiển thị email khách hàng, từ khóa prompt và thành phần kim loại đá quý. Điều hướng trạng thái thẩm định từ 'Mới tạo' ➔ 'Duyệt đúc mẫu' hoặc 'Không khả thi'. Hệ thống tự động kích hoạt bộ đệm null-safety nếu thiếu thông tin.",
+    secFinanceTitle: "4. Tài chính Đối tác & Phê duyệt",
+    secFinanceDesc: "Phê duyệt hoặc từ chối đề xuất niêm yết của đối tác. Quản trị viên kiểm tra độ tinh khiết (14K/18K), trọng lượng carat và mã chứng chỉ GIA. Cấu hình tỷ lệ hoa hồng danh mục (Bạc, Vàng, Kim cương, AI Studio) đồng bộ trực tiếp lên Cloud Firestore. Hệ thống tự động tính toán đối soát ([Doanh thu] - [Phí nền tảng] = [Thực nhận]) và xuất file CSV chuyển khoản ngân hàng.",
+    secChatTitle: "5. Hỗ trợ Trực tuyến & Telemetry",
+    secChatDesc: "Giám sát thời gian thực các cuộc trò chuyện giữa khách hàng và Trợ lý AI. Giỏ hàng trên $1,500 sẽ kích hoạt viền nhấp nháy vàng và chuông cảnh báo bằng Web Audio API. Nhấp 'Can Thiệp Trực Tiếp' để giành quyền trò chuyện của AI và tư vấn chốt sale. Đo lường telemetry theo dõi độ trễ API Gemini (ai_stylist_analysis_trace) và chẩn đoán đột biến nghẽn mạng.",
     
     // Interface Customizer
     brightnessTitle: "Độ sáng & Mật độ Giao diện",
@@ -192,6 +222,7 @@ export default function Settings({ onLogout, locale, onLocaleChange }) {
           { id: 'interface', label: t.tabInterface, icon: Sliders },
           { id: 'localization', label: t.tabLocalization, icon: Languages },
           { id: 'system', label: t.tabSystem, icon: Monitor },
+          { id: 'guide', label: t.tabGuide, icon: HelpCircle },
         ].map(tab => {
           const Icon = tab.icon;
           const isSelected = activeTab === tab.id;
@@ -444,6 +475,55 @@ export default function Settings({ onLogout, locale, onLocaleChange }) {
               </div>
             </div>
 
+          </div>
+        )}
+
+        {/* --- TAB 4: User Guide --- */}
+        {activeTab === 'guide' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div className="glass-panel" style={{ padding: '32px' }}>
+              <div style={{ borderBottom: '1px solid rgba(212,175,55,0.1)', paddingBottom: '20px', marginBottom: '28px' }}>
+                <h2 style={{ fontSize: '1.45rem', fontWeight: '700', color: 'var(--gold-primary)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <HelpCircle size={22} />
+                  {t.guideHeader}
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '6px' }}>{t.guideSub}</p>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+                
+                {/* 1. Aesthetics Preset */}
+                <div style={{ background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '20px' }}>
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '10px' }}>{t.secOverviewTitle}</h4>
+                  <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>{t.secOverviewDesc}</p>
+                </div>
+
+                {/* 2. AR Media Hub */}
+                <div style={{ background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '20px' }}>
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '10px' }}>{t.secArTitle}</h4>
+                  <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>{t.secArDesc}</p>
+                </div>
+
+                {/* 3. AI Custom Feasibility */}
+                <div style={{ background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '20px' }}>
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '10px' }}>{t.secAiTitle}</h4>
+                  <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>{t.secAiDesc}</p>
+                </div>
+
+                {/* 4. Vendor Financial Console */}
+                <div style={{ background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '20px' }}>
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '10px' }}>{t.secFinanceTitle}</h4>
+                  <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>{t.secFinanceDesc}</p>
+                </div>
+
+                {/* 5. Chat Takeover & Telemetry */}
+                <div style={{ background: 'var(--bg-base)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '20px' }}>
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '10px' }}>{t.secChatTitle}</h4>
+                  <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>{t.secChatDesc}</p>
+                </div>
+
+              </div>
+            </div>
           </div>
         )}
 
