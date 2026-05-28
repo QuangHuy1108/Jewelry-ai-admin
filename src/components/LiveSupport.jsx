@@ -127,6 +127,11 @@ export default function LiveSupport() {
     return () => {
       // --- Safe Unmounting & Cleanup (Task 16) ---
       if (unsubscribe) unsubscribe();
+      if (audioContextRef.current) {
+        audioContextRef.current.close().catch(err => {
+          console.warn('AudioContext close failed on unmount:', err);
+        });
+      }
     };
   }, []);
 
