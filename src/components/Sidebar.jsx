@@ -11,10 +11,11 @@ import {
   Box,
   Sparkles,
   CreditCard,
-  MessageSquare
+  MessageSquare,
+  Settings
 } from 'lucide-react';
 
-export default function Sidebar({ currentTab, setCurrentTab, onLogout }) {
+export default function Sidebar({ currentTab, setCurrentTab }) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'products', label: 'Products', icon: Package },
@@ -28,6 +29,7 @@ export default function Sidebar({ currentTab, setCurrentTab, onLogout }) {
     { id: 'ai-custom-designs', label: 'AI Custom Designs', icon: Sparkles },
     { id: 'vendor-financials', label: 'Vendor Financials', icon: CreditCard },
     { id: 'live-support', label: 'Live Chat & Telemetry', icon: MessageSquare },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   return (
@@ -55,31 +57,7 @@ export default function Sidebar({ currentTab, setCurrentTab, onLogout }) {
           );
         })}
       </ul>
-
-      {onLogout && (
-        <div style={{ padding: '20px' }}>
-          <button
-            onClick={onLogout}
-            style={{
-              width: '100%',
-              padding: '12px',
-              borderRadius: '8px',
-              border: '1px solid rgba(244, 67, 54, 0.3)',
-              background: 'rgba(244, 67, 54, 0.1)',
-              color: '#F44336',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              transition: 'all 0.2s',
-            }}
-          >
-            Logout
-          </button>
-        </div>
-      )}
     </aside>
   );
 }
+

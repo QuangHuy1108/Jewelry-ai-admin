@@ -16,8 +16,10 @@ import ArMediaHub from './components/ArMediaHub';
 import AiCustomDesigns from './components/AiCustomDesigns';
 import VendorFinancials from './components/VendorFinancials';
 import LiveSupport from './components/LiveSupport';
+import Settings from './components/Settings';
 
 export default function App() {
+
   const [currentTab, setCurrentTab] = useState('dashboard');
   const [user, setUser] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
@@ -94,6 +96,8 @@ export default function App() {
         return <VendorFinancials />;
       case 'live-support':
         return <LiveSupport />;
+      case 'settings':
+        return <Settings onLogout={handleLogout} />;
       default:
         return <DashboardStats />;
     }
@@ -101,10 +105,11 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} onLogout={handleLogout} />
+      <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
       <main className="main-content">
         {renderContent()}
       </main>
     </div>
   );
 }
+
