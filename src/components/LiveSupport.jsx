@@ -540,7 +540,7 @@ export default function LiveSupport({ locale = 'en' }) {
             </div>
 
             {/* Conversation view */}
-            <div style={{ display: 'flex', flexDirection: 'column', height: '520px', background: '#070708' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', height: '520px', background: 'var(--bg-base)' }}>
               {selectedChat ? (
                 <>
                   {/* Chat Room Header */}
@@ -685,7 +685,7 @@ export default function LiveSupport({ locale = 'en' }) {
             </div>
 
             {/* Recharts Latency Diagram */}
-            <div style={{ background: '#070708', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.06)', padding: '20px 10px 10px 10px' }}>
+            <div style={{ background: 'var(--bg-base)', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.06)', padding: '20px 10px 10px 10px' }}>
               <p style={{ fontSize: '0.8rem', color: 'var(--gold-primary)', fontWeight: '600', paddingLeft: '10px', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <TrendingUp size={12} /> {t.latencyChartTitle}
               </p>
