@@ -12,6 +12,8 @@ import CouponsManager from './components/CouponsManager';
 import UsersManager from './components/UsersManager';
 import SellerApplicationsManager from './components/SellerApplicationsManager';
 import Login from './components/Login';
+import ArMediaHub from './components/ArMediaHub';
+import AiCustomDesigns from './components/AiCustomDesigns';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('dashboard');
@@ -72,6 +74,10 @@ export default function App() {
         return <UsersManager />;
       case 'seller-applications':
         return <SellerApplicationsManager />;
+      case 'ar-media-hub':
+        return <ArMediaHub />;
+      case 'ai-custom-designs':
+        return <AiCustomDesigns />;
       default:
         return <DashboardStats />;
     }

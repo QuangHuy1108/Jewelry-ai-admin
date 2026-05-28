@@ -7,7 +7,9 @@ import {
   ShoppingCart, 
   Tag, 
   Users,
-  Store
+  Store,
+  Box,
+  Sparkles
 } from 'lucide-react';
 
 export default function Sidebar({ currentTab, setCurrentTab, onLogout }) {
@@ -20,6 +22,8 @@ export default function Sidebar({ currentTab, setCurrentTab, onLogout }) {
     { id: 'coupons', label: 'Coupons', icon: Tag },
     { id: 'users', label: 'Users', icon: Users },
     { id: 'seller-applications', label: 'Seller Applications', icon: Store },
+    { id: 'ar-media-hub', label: 'AR & Media Hub', icon: Box },
+    { id: 'ai-custom-designs', label: 'AI Custom Designs', icon: Sparkles },
   ];
 
   return (
