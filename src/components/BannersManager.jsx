@@ -3,7 +3,66 @@ import { db } from '../firebase';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
 
-export default function BannersManager() {
+const translations = {
+  en: {
+    title: "Promotional Banners",
+    subtitle: "Configure carousel banners displayed on the home feed header",
+    createBanner: "Create Banner",
+    thOrder: "Order",
+    thPreview: "Banner Visual Preview",
+    thCampaign: "Title / Campaign",
+    thStatus: "Status",
+    thActions: "Actions",
+    noBanners: 'No active banners configured. Click "Create Banner" to start.',
+    liveCarousel: "Live Carousel",
+    archived: "Archived",
+    editBanner: "Edit Promotional Banner",
+    addNewBanner: "Create New Banner",
+    campaignLabel: "Campaign Title *",
+    bannerUrlLabel: "Banner Image URL *",
+    bannerHelp: "Recommended resolution: 1200x500 pixels for rich fidelity display.",
+    targetLabel: "Link/Target Action",
+    priorityLabel: "Display Priority Order",
+    visibleLabel: "Active & Visible in Mobile App",
+    cancel: "Cancel",
+    saveChanges: "Save Changes",
+    publishBanner: "Publish Banner",
+    confirmDelete: "Are you sure you want to delete this promotional banner?",
+    alertDeleteErr: "Error deleting banner: ",
+    alertSaveErr: "Error saving banner: "
+  },
+  vi: {
+    title: "Banner Quảng Cáo",
+    subtitle: "Cấu hình banner trình chiếu hiển thị ở đầu trang chủ ứng dụng",
+    createBanner: "Tạo Banner",
+    thOrder: "Thứ tự",
+    thPreview: "Hình ảnh xem trước",
+    thCampaign: "Tiêu đề / Chiến dịch",
+    thStatus: "Trạng thái",
+    thActions: "Hành động",
+    noBanners: 'Chưa có banner nào hoạt động. Hãy bấm "Tạo Banner" để bắt đầu.',
+    liveCarousel: "Đang Trình Chiếu",
+    archived: "Đã Lưu Trữ",
+    editBanner: "Sửa Banner Quảng Cáo",
+    addNewBanner: "Tạo Banner Mới",
+    campaignLabel: "Tiêu Đề Chiến Dịch *",
+    bannerUrlLabel: "Đường Dẫn Ảnh Banner *",
+    bannerHelp: "Độ phân giải khuyến nghị: 1200x500 pixels để hiển thị sắc nét nhất.",
+    targetLabel: "Liên kết / Hành động điều hướng",
+    priorityLabel: "Thứ Tự Ưu Tiên Hiển Thị",
+    visibleLabel: "Kích hoạt & Hiển thị trên Ứng dụng di động",
+    cancel: "Hủy",
+    saveChanges: "Lưu thay đổi",
+    publishBanner: "Xuất bản Banner",
+    confirmDelete: "Bạn có chắc chắn muốn xóa banner quảng cáo này?",
+    alertDeleteErr: "Lỗi xóa banner: ",
+    alertSaveErr: "Lỗi lưu banner: "
+  }
+};
+
+export default function BannersManager({ locale = 'en' }) {
+  const t = translations[locale] || translations.en;
+
   const [banners, setBanners] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -52,11 +111,11 @@ export default function BannersManager() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this promotional banner?')) {
+    if (window.confirm(t.confirmDelete)) {
       try {
         await deleteDoc(doc(db, 'banners', id));
       } catch (err) {
-        alert('Error deleting banner: ' + err.message);
+        alert(t.alertDeleteErr + err.message);
       }
     }
   };
@@ -82,7 +141,7 @@ export default function BannersManager() {
       }
       setIsModalOpen(false);
     } catch (err) {
-      alert('Error saving banner: ' + err.message);
+      alert(t.alertSaveErr + err.message);
     }
   };
 
@@ -90,12 +149,12 @@ export default function BannersManager() {
     <div>
       <div className="header-bar">
         <div>
-          <h1 className="page-title">Promotional Banners</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>Configure carousel banners displayed on the home feed header</p>
+          <h1 className="page-title">{t.title}</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>{t.subtitle}</p>
         </div>
         <button className="btn btn-primary" onClick={openAddModal}>
           <Plus size={18} />
-          <span>Create Banner</span>
+          <span>{t.createBanner}</span>
         </button>
       </div>
 
@@ -103,18 +162,18 @@ export default function BannersManager() {
         <table className="rich-table">
           <thead>
             <tr>
-              <th>Order</th>
-              <th>Banner Visual Preview</th>
-              <th>Title / Campaign</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th>{t.thOrder}</th>
+              <th>{t.thPreview}</th>
+              <th>{t.thCampaign}</th>
+              <th>{t.thStatus}</th>
+              <th>{t.thActions}</th>
             </tr>
           </thead>
           <tbody>
             {banners.length === 0 ? (
               <tr>
                 <td colSpan="5" style={{ textAlign: 'center', padding: '32px', color: 'var(--text-muted)' }}>
-                  No active banners configured. Click "Create Banner" to start.
+                  {t.noBanners}
                 </td>
               </tr>
             ) : (
@@ -130,7 +189,7 @@ export default function BannersManager() {
                       />
                     ) : (
                       <div style={{ width: '180px', height: '80px', background: '#27272a', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                        Placeholder
+                        {t.thPreview}
                       </div>
                     )}
                   </td>
@@ -140,7 +199,7 @@ export default function BannersManager() {
                   </td>
                   <td>
                     <span className={`badge ${b.isActive !== false ? 'badge-success' : 'badge-danger'}`}>
-                      {b.isActive !== false ? 'Live Carousel' : 'Archived'}
+                      {b.isActive !== false ? t.liveCarousel : t.archived}
                     </span>
                   </td>
                   <td>
@@ -165,7 +224,7 @@ export default function BannersManager() {
         <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3 className="modal-title">{editingId ? 'Edit Promotional Banner' : 'Create New Banner'}</h3>
+              <h3 className="modal-title">{editingId ? t.editBanner : t.addNewBanner}</h3>
               <button 
                 style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', fontSize: '1.5rem', cursor: 'pointer' }}
                 onClick={() => setIsModalOpen(false)}
@@ -176,7 +235,7 @@ export default function BannersManager() {
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label className="form-label">Campaign Title *</label>
+                <label className="form-label">{t.campaignLabel}</label>
                 <input 
                   type="text" 
                   className="form-input" 
@@ -188,7 +247,7 @@ export default function BannersManager() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Banner Image URL *</label>
+                <label className="form-label">{t.bannerUrlLabel}</label>
                 <input 
                   type="text" 
                   className="form-input" 
@@ -198,12 +257,12 @@ export default function BannersManager() {
                   onChange={e => setFormData({...formData, imageUrl: e.target.value})}
                 />
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>
-                  Recommended resolution: 1200x500 pixels for rich fidelity display.
+                  {t.bannerHelp}
                 </span>
               </div>
 
               <div className="form-group">
-                <label className="form-label">Link/Target Action</label>
+                <label className="form-label">{t.targetLabel}</label>
                 <input 
                   type="text" 
                   className="form-input" 
@@ -214,7 +273,7 @@ export default function BannersManager() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Display Priority Order</label>
+                <label className="form-label">{t.priorityLabel}</label>
                 <input 
                   type="number" 
                   className="form-input" 
@@ -230,13 +289,13 @@ export default function BannersManager() {
                     checked={formData.isActive} 
                     onChange={e => setFormData({...formData, isActive: e.target.checked})}
                   />
-                  <span style={{ fontSize: '0.95rem' }}>Active & Visible in Mobile App</span>
+                  <span style={{ fontSize: '0.95rem' }}>{t.visibleLabel}</span>
                 </label>
               </div>
 
               <div className="form-actions">
-                <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">{editingId ? 'Save Changes' : 'Publish Banner'}</button>
+                <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>{t.cancel}</button>
+                <button type="submit" className="btn btn-primary">{editingId ? t.saveChanges : t.publishBanner}</button>
               </div>
             </form>
           </div>

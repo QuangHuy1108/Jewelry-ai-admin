@@ -33,7 +33,95 @@ import {
   Legend
 } from 'recharts';
 
-export default function LiveSupport() {
+const translations = {
+  en: {
+    title: "Live Support & Telemetry",
+    subtitle: "Monitor customer AI chats, step in to rescue high-value carts, and track latency metrics",
+    alertHighTicketTitle: "High-Ticket Shopping Cart Alert",
+    alertHighTicketDesc: "A customer has jewelry items exceeding $1,500 in their shopping cart. Recommend GIA cert advice.",
+    btnTestChime: "Test Chime",
+    
+    // Consultations panel
+    panelTitle: "Active Consultations",
+    loadingText: "Loading rooms...",
+    badgeLiveOverride: "● Live Override",
+    badgeAiHandling: "○ AI Handling",
+    rescueAlert: "⚠️ RESCUE NEEDED",
+    
+    // Conversation View
+    cartValueLabel: "Cart Value:",
+    btnTakeover: "Takeover Live Chat",
+    badgeOverridden: "Admin Overridden",
+    chatRoleClient: "Client",
+    chatRoleAi: "✦ AI Stylist",
+    chatRoleAgent: "Agent Arthur",
+    textboxPlaceholder: "Type an override message (e.g. recommend GIA cert clarity, offer cart discount)...",
+    textboxTakeoverNotice: "Takeover Live Chat first to enable human overrides textbox.",
+    panelDetailPlaceholder: "Select an active room on the left panel to override and monitor chat streams",
+    
+    // Telemetry Dashboard
+    telemetryTitle: "AI Performance Telemetry",
+    telemetrySubtitle: "Real-time latency metrics from Custom Trace `ai_stylist_analysis_trace` on mobile app.",
+    quotaLabel: "Gemini API Quota",
+    quotaAvail: "94.2% Avail",
+    congestionLabel: "Congestion Diagnostics",
+    congestionSpikes: "1 Spike",
+    latencyChartTitle: "Latency Trends (ms)",
+    latencyChartKey: "Gemini Latency (ms)",
+    quotaChartKey: "Quota Usage",
+    telemetryDiagnosticTitle: "Telemetry Spike Diagnostic (11:00)",
+    telemetryDiagnosticDesc: "High latency spike of 1,180ms detected during peak hours (11:00). High quota request levels triggered rate-limiting trace thresholds. Quota remains stable.",
+    
+    // Alerts
+    alertTakeoverFail: "Takeover failed: ",
+    alertSendFail: "Failed to send override message: "
+  },
+  vi: {
+    title: "Hỗ Trợ & Đo Lường Trực Tuyến",
+    subtitle: "Giám sát cuộc trò chuyện AI của khách hàng, can thiệp cứu giỏ hàng giá trị cao và theo dõi độ trễ hệ thống",
+    alertHighTicketTitle: "Cảnh Báo Giỏ Hàng Giá Trị Cao",
+    alertHighTicketDesc: "Khách hàng có sản phẩm trang sức vượt quá $1,500 trong giỏ hàng. Hãy can thiệp tư vấn chứng chỉ GIA.",
+    btnTestChime: "Thử Chuông",
+    
+    // Consultations panel
+    panelTitle: "Tư Vấn Đang Hoạt Động",
+    loadingText: "Đang tải danh sách phòng...",
+    badgeLiveOverride: "● Tư vấn viên",
+    badgeAiHandling: "○ Trợ lý AI",
+    rescueAlert: "⚠️ CẦN CAN THIỆP",
+    
+    // Conversation View
+    cartValueLabel: "Giá trị giỏ hàng:",
+    btnTakeover: "Can Thiệp Trực Tiếp",
+    badgeOverridden: "Đã can thiệp",
+    chatRoleClient: "Khách hàng",
+    chatRoleAi: "✦ Trợ lý AI",
+    chatRoleAgent: "Quản trị Arthur",
+    textboxPlaceholder: "Nhập tin nhắn can thiệp (ví dụ: tư vấn độ tinh khiết GIA, ưu đãi giảm giá)...",
+    textboxTakeoverNotice: "Vui lòng can thiệp trực tiếp trước khi nhập tin nhắn hỗ trợ.",
+    panelDetailPlaceholder: "Chọn một cuộc trò chuyện từ danh sách bên trái để theo dõi và hỗ trợ trực tuyến",
+    
+    // Telemetry Dashboard
+    telemetryTitle: "Đo Lường Hiệu Suất AI",
+    telemetrySubtitle: "Chỉ số độ trễ thời gian thực từ Custom Trace `ai_stylist_analysis_trace` trên app di động.",
+    quotaLabel: "Hạn mức Gemini API",
+    quotaAvail: "94.2% Khả dụng",
+    congestionLabel: "Chẩn Đoán Nghẽn Mạng",
+    congestionSpikes: "1 Đột Biến",
+    latencyChartTitle: "Xu Hướng Độ Trễ (ms)",
+    latencyChartKey: "Độ trễ Gemini (ms)",
+    quotaChartKey: "Mức Sử Dụng Quota",
+    telemetryDiagnosticTitle: "Chẩn Đoán Đột Biến Độ Trễ (11:00)",
+    telemetryDiagnosticDesc: "Phát hiện đột biến độ trễ cao 1,180ms trong giờ cao điểm (11:00). Yêu cầu hạn ngạch cao đã kích hoạt ngưỡng giới hạn tần suất. Hạn ngạch hiện tại vẫn ổn định.",
+    
+    // Alerts
+    alertTakeoverFail: "Không thể can thiệp: ",
+    alertSendFail: "Gửi tin nhắn can thiệp thất bại: "
+  }
+};
+
+export default function LiveSupport({ locale = 'en' }) {
+  const t = translations[locale] || translations.en;
   const [chats, setChats] = useState([]);
   const [selectedChatId, setSelectedChatId] = useState(null);
   const [activeMessageText, setActiveMessageText] = useState('');
@@ -195,7 +283,7 @@ export default function LiveSupport() {
         });
       }
     } catch (err) {
-      alert('Takeover failed: ' + err.message);
+      alert(t.alertTakeoverFail + err.message);
     }
   };
 
@@ -209,7 +297,7 @@ export default function LiveSupport() {
     const newMessage = {
       sender: 'Human_Agent',
       text: activeMessageText.trim(),
-      time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+      time: new Date().toLocaleTimeString(locale === 'vi' ? 'vi-VN' : 'en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
     };
 
     try {
@@ -235,7 +323,7 @@ export default function LiveSupport() {
       }
       setActiveMessageText('');
     } catch (err) {
-      alert('Failed to send override message: ' + err.message);
+      alert(t.alertSendFail + err.message);
     }
   };
 
@@ -279,7 +367,7 @@ export default function LiveSupport() {
                 <span>{p.name}:</span>
               </span>
               <span style={{ fontWeight: '700', color: 'var(--text-primary)' }}>
-                {p.name.includes('Latency') ? `${p.value} ms` : `${p.value}% load`}
+                {p.name === t.latencyChartKey ? `${p.value} ms` : `${p.value}% load`}
               </span>
             </p>
           ))}
@@ -289,12 +377,18 @@ export default function LiveSupport() {
     return null;
   };
 
+  const localizedTelemetryData = telemetryData.map(d => ({
+    hour: d.hour,
+    [t.latencyChartKey]: d['Gemini Latency (ms)'],
+    [t.quotaChartKey]: d['Quota Usage']
+  }));
+
   return (
     <div>
       <div className="header-bar">
         <div>
-          <h1 className="page-title" style={{ fontSize: '2.25rem', color: 'var(--text-primary)' }}>Live Support & Telemetry</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '6px' }}>Monitor customer AI chats, step in to rescue high-value carts, and track latency metrics</p>
+          <h1 className="page-title" style={{ fontSize: '2.25rem', color: 'var(--text-primary)' }}>{t.title}</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '6px' }}>{t.subtitle}</p>
         </div>
       </div>
 
@@ -318,8 +412,8 @@ export default function LiveSupport() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <BellRing size={20} className="shake" color="var(--gold-primary)" />
                 <div>
-                  <h4 style={{ fontSize: '0.95rem', fontWeight: '700', color: 'var(--text-primary)' }}>High-Ticket Shopping Cart Alert</h4>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>A customer has jewelry items exceeding $1,500 in their shopping cart. Recommend GIA cert advice.</p>
+                  <h4 style={{ fontSize: '0.95rem', fontWeight: '700', color: 'var(--text-primary)' }}>{t.alertHighTicketTitle}</h4>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t.alertHighTicketDesc}</p>
                 </div>
               </div>
               <button 
@@ -337,7 +431,7 @@ export default function LiveSupport() {
                   cursor: 'pointer'
                 }}
               >
-                <Volume2 size={12} /> Test Chime
+                <Volume2 size={12} /> {t.btnTestChime}
               </button>
             </div>
           )}
@@ -349,13 +443,13 @@ export default function LiveSupport() {
               <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                 <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <MessageSquare size={16} color="var(--gold-primary)" />
-                  Active Consultations
+                  {t.panelTitle}
                 </h3>
               </div>
 
               <div style={{ flex: 1, overflowY: 'auto', padding: '12px' }}>
                 {loading ? (
-                  <p style={{ textAlign: 'center', padding: '20px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>Loading rooms...</p>
+                  <p style={{ textAlign: 'center', padding: '20px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t.loadingText}</p>
                 ) : (
                   chats.map(room => {
                     const isHighTicket = room.cartValue > 1500;
@@ -429,12 +523,12 @@ export default function LiveSupport() {
                             padding: '2px 6px',
                             borderRadius: '20px'
                           }}>
-                            {isTakenOver ? '● Live Override' : '○ AI Handling'}
+                            {isTakenOver ? t.badgeLiveOverride : t.badgeAiHandling}
                           </span>
                           
                           {isHighTicket && !isTakenOver && (
                             <span style={{ fontSize: '0.65rem', fontWeight: 'bold', color: 'var(--gold-primary)', animation: 'pulse 1s infinite' }}>
-                              ⚠️ RESCUE NEEDED
+                              {t.rescueAlert}
                             </span>
                           )}
                         </div>
@@ -454,7 +548,7 @@ export default function LiveSupport() {
                     <div>
                       <h4 style={{ fontSize: '0.95rem', fontWeight: '700', color: 'var(--text-primary)' }}>{selectedChat.customerEmail}</h4>
                       <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                        Cart Value: <strong style={{ color: 'var(--gold-primary)' }}>${selectedChat.cartValue.toLocaleString()}</strong>
+                        {t.cartValueLabel} <strong style={{ color: 'var(--gold-primary)' }}>${selectedChat.cartValue.toLocaleString()}</strong>
                       </p>
                     </div>
 
@@ -464,11 +558,11 @@ export default function LiveSupport() {
                         className="btn btn-primary"
                         style={{ padding: '8px 14px', fontSize: '0.8rem', gap: '6px' }}
                       >
-                        <Zap size={12} /> Takeover Live Chat
+                        <Zap size={12} /> {t.btnTakeover}
                       </button>
                     ) : (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--accent-green)', fontSize: '0.8rem', fontWeight: '600', border: '1px solid rgba(76,175,80,0.2)', padding: '6px 12px', borderRadius: '20px', background: 'rgba(76,175,80,0.05)' }}>
-                        <Shield size={12} /> Admin Overridden
+                        <Shield size={12} /> {t.badgeOverridden}
                       </div>
                     )}
                   </div>
@@ -510,7 +604,7 @@ export default function LiveSupport() {
                           {/* Timestamp and Sender metadata */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '4px' }}>
                             <span style={{ fontWeight: '600', color: isCustomer ? 'var(--text-muted)' : isAi ? 'var(--accent-blue)' : 'var(--gold-primary)' }}>
-                              {isCustomer ? 'Client' : isAi ? '✦ AI Stylist' : '🛡️ Agent Arthur'}
+                              {isCustomer ? t.chatRoleClient : isAi ? t.chatRoleAi : t.chatRoleAgent}
                             </span>
                             <span>·</span>
                             <span>{msg.time}</span>
@@ -526,7 +620,7 @@ export default function LiveSupport() {
                       <form onSubmit={handleSendMessage} style={{ display: 'flex', gap: '12px' }}>
                         <input 
                           type="text"
-                          placeholder="Type an override message (e.g. recommend GIA cert clarity, offer cart discount)..."
+                          placeholder={t.textboxPlaceholder}
                           value={activeMessageText}
                           onChange={e => setActiveMessageText(e.target.value)}
                           style={{
@@ -550,7 +644,7 @@ export default function LiveSupport() {
                       </form>
                     ) : (
                       <div style={{ textAlign: 'center', padding: '10px', fontSize: '0.8rem', color: 'var(--text-muted)', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', border: '1px dashed rgba(255,255,255,0.03)' }}>
-                        Takeover Live Chat first to enable human overrides textbox.
+                        {t.textboxTakeoverNotice}
                       </div>
                     )}
                   </div>
@@ -558,7 +652,7 @@ export default function LiveSupport() {
               ) : (
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', padding: '40px' }}>
                   <MessageSquare size={36} style={{ marginBottom: '12px', opacity: 0.4 }} />
-                  <p style={{ fontSize: '0.85rem' }}>Select an active room on the left panel to override and monitor chat streams</p>
+                  <p style={{ fontSize: '0.85rem' }}>{t.panelDetailPlaceholder}</p>
                 </div>
               )}
             </div>
@@ -572,31 +666,31 @@ export default function LiveSupport() {
           <div className="glass-panel" style={{ padding: '32px' }}>
             <h2 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '8px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Activity size={22} color="var(--gold-primary)" />
-              AI Performance Telemetry
+              {t.telemetryTitle}
             </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '24px' }}>
-              Real-time latency metrics from Custom Trace `ai_stylist_analysis_trace` on mobile app.
+              {t.telemetrySubtitle}
             </p>
 
             {/* Quota Load Indicators */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
               <div style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: '10px', padding: '14px', textAlign: 'center' }}>
-                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Gemini API Quota</p>
-                <p style={{ fontSize: '1.35rem', fontWeight: '800', color: 'var(--accent-green)', marginTop: '4px' }}>94.2% Avail</p>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t.quotaLabel}</p>
+                <p style={{ fontSize: '1.35rem', fontWeight: '800', color: 'var(--accent-green)', marginTop: '4px' }}>{t.quotaAvail}</p>
               </div>
               <div style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: '10px', padding: '14px', textAlign: 'center' }}>
-                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Congestion Diagnostics</p>
-                <p style={{ fontSize: '1.35rem', fontWeight: '800', color: 'var(--accent-orange)', marginTop: '4px' }}>1 Spike</p>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t.congestionLabel}</p>
+                <p style={{ fontSize: '1.35rem', fontWeight: '800', color: 'var(--accent-orange)', marginTop: '4px' }}>{t.congestionSpikes}</p>
               </div>
             </div>
 
             {/* Recharts Latency Diagram */}
             <div style={{ background: '#070708', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.06)', padding: '20px 10px 10px 10px' }}>
               <p style={{ fontSize: '0.8rem', color: 'var(--gold-primary)', fontWeight: '600', paddingLeft: '10px', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <TrendingUp size={12} /> Latency Trends (ms)
+                <TrendingUp size={12} /> {t.latencyChartTitle}
               </p>
               <ResponsiveContainer width="100%" height={260}>
-                <LineChart data={telemetryData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                <LineChart data={localizedTelemetryData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                   <CartesianGrid stroke="rgba(212, 175, 55, 0.05)" strokeDasharray="3 3" />
                   <XAxis dataKey="hour" stroke="var(--text-secondary)" tick={{ fontSize: 10, fontFamily: 'Outfit' }} />
                   <YAxis 
@@ -606,8 +700,8 @@ export default function LiveSupport() {
                   />
                   <Tooltip content={<CustomTelemetryTooltip />} />
                   <Legend wrapperStyle={{ fontFamily: 'Outfit', fontSize: '0.75rem', paddingTop: '10px' }} />
-                  <Line type="monotone" dataKey="Gemini Latency (ms)" stroke="var(--gold-primary)" strokeWidth={2.5} activeDot={{ r: 6 }} />
-                  <Line type="monotone" dataKey="Quota Usage" stroke="#3b82f6" strokeWidth={1.5} strokeDasharray="5 5" />
+                  <Line type="monotone" dataKey={t.latencyChartKey} stroke="var(--gold-primary)" strokeWidth={2.5} activeDot={{ r: 6 }} />
+                  <Line type="monotone" dataKey={t.quotaChartKey} stroke="#3b82f6" strokeWidth={1.5} strokeDasharray="5 5" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -615,10 +709,10 @@ export default function LiveSupport() {
             {/* Latency Diagnostic Notes */}
             <div style={{ marginTop: '20px', background: 'rgba(245,158,11,0.05)', border: '1px solid rgba(245,158,11,0.2)', padding: '12px 14px', borderRadius: '8px' }}>
               <p style={{ fontSize: '0.75rem', color: 'var(--accent-orange)', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <AlertTriangle size={14} /> Telemetry Spike Diagnostic (11:00)
+                <AlertTriangle size={14} /> {t.telemetryDiagnosticTitle}
               </p>
               <p style={{ fontSize: '0.8rem', color: 'var(--text-primary)', marginTop: '4px', lineHeight: '1.4' }}>
-                High latency spike of <strong>1,180ms</strong> detected during peak hours (11:00). High quota request levels triggered rate-limiting trace thresholds. Quota remains stable.
+                {t.telemetryDiagnosticDesc}
               </p>
             </div>
 

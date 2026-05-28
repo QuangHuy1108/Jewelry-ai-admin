@@ -14,7 +14,118 @@ import {
   Play
 } from 'lucide-react';
 
-export default function ArMediaHub() {
+const translations = {
+  en: {
+    title: "AR & AI Media Studio",
+    subtitle: "Coordinate 3D models try-on anchor parameters and generate luxury advertising backdrops",
+    tab3d: "3D AR Model Calibration",
+    tabImage: "AI Creative Image Studio",
+    anchorTitle: "3D AR Asset Coordinator",
+    anchorSubtitle: "Upload virtual assets, fine-tune spatial coordinates for mobile rendering, and optimize models using Draco Compression.",
+    anchorChoose: "Choose a .GLTF or .GLB file",
+    anchorNoFile: "No GLTF model selected.",
+    anchorLabel: "Augmented Reality Anchor Type",
+    anchorDragDrop: "Drag and drop your 3D jewelry asset here (Max 50MB)",
+    dracoTitle: "Draco Mesh Compression Simulation Pipeline",
+    dracoDesc: "Run Draco optimization algorithms on the selected mesh asset to shrink bandwidth constraints and load times by up to 90% in mobile viewports.",
+    dracoBtn: "Run Draco Pipeline",
+    dracoCompacting: "Running Compression...",
+    dracoOrig: "Raw Mesh Size",
+    dracoOpt: "Compressed Size",
+    dracoSave: "Bandwidth Saved",
+    dracoTime: "Optimizing Execution Time:",
+    dracoStatus: "Pipeline Status:",
+    dracoLog: "Optimizing mesh densities, compressing vertices, packing buffers...",
+    dracoDelay: "Delay",
+    coordTitle: "Spatial Positioning Anchors (mm)",
+    coordSubtitle: "Real-time slider controls representing absolute Firestore vector offsets",
+    axisX: "Offset X (Ear-to-Ear)",
+    axisY: "Offset Y (Vertical Alignment)",
+    axisZ: "Offset Z (Depth Offset)",
+    scale: "Scale multiplier",
+    pitch: "Rotation Pitch (deg)",
+    yaw: "Rotation Yaw (deg)",
+    roll: "Rotation Roll (deg)",
+    verifyAnchorBtn: "Verify Mobile Anchor Profile",
+    studioTitle: "AI Background Enhancer Canvas",
+    studioSubtitle: "Provide high-end visual product enhancements. Upload a raw jewelry shot and apply generative prompts to replace background textures.",
+    studioUpload: "Select Raw Product Photo",
+    studioNoImage: "No catalog jewelry image uploaded.",
+    studioPrompt: "Generative AI Background Prompt",
+    studioPromptPlaceholder: "Describe luxurious scenery (plinth textures, surfaces, light rays...)",
+    studioEnhance: "Enhance Background with Gen-AI",
+    studioEnhancing: "Generating Background in Cloud Engine...",
+    studioLoaded: "Product Image Loaded",
+    studioRemove: "Remove file",
+    studioSupports: "Supports JPG, PNG, WEBP",
+    studioPresets: "Select Premium Studio Presets:",
+    studioCompleted: "Generative background replacement completed!",
+    splitLabel: "Swipe comparison:",
+    beforeText: "BEFORE RAW",
+    afterText: "AFTER GEN-AI",
+    ear: "Ear (Anchored Earring Try-on)",
+    finger: "Finger (Anchored Ring Try-on)",
+    neck: "Neck (Anchored Necklace Try-on)",
+    wrist: "Wrist (Anchored Bracelet Try-on)"
+  },
+  vi: {
+    title: "Trung Tâm AR & AI",
+    subtitle: "Hiệu chỉnh tọa độ neo mô hình 3D thử đồ ảo và tạo ảnh nền quảng cáo sang trọng",
+    tab3d: "Hiệu Chỉnh Mô Hình 3D AR",
+    tabImage: "Phòng Thiết Kế Ảnh Sáng Tạo AI",
+    anchorTitle: "Bộ Điều Phối Tài Nguyên 3D AR",
+    anchorSubtitle: "Tải lên tài nguyên ảo, tinh chỉnh tọa độ không gian để hiển thị trên di động và tối ưu hóa lưới bằng Draco.",
+    anchorChoose: "Chọn tệp .GLTF hoặc .GLB",
+    anchorNoFile: "Chưa chọn mô hình GLTF nào.",
+    anchorLabel: "Nhóm Điểm Neo Thử Đồ",
+    anchorDragDrop: "Kéo thả tài nguyên trang sức 3D của bạn vào đây (Tối đa 50MB)",
+    dracoTitle: "Hệ Thống Nén Lưới Draco",
+    dracoDesc: "Chạy thuật toán tối ưu hóa lưới Draco trên tài nguyên đã chọn để giảm thiểu băng thông tải và tăng tốc độ hiển thị trên di động lên đến 90%.",
+    dracoBtn: "Chạy Trình Nén Draco",
+    dracoCompacting: "Đang tiến hành nén lưới...",
+    dracoOrig: "Kích thước gốc",
+    dracoOpt: "Kích thước nén",
+    dracoSave: "Băng thông giảm",
+    dracoTime: "Thời gian xử lý nén:",
+    dracoStatus: "Trạng thái tiến trình:",
+    dracoLog: "Đang tối ưu hóa mật độ lưới, nén đỉnh, đóng gói bộ đệm phân đoạn...",
+    dracoDelay: "Thời gian trễ",
+    coordTitle: "Cân Chỉnh Tọa Độ Không Gian (mm)",
+    coordSubtitle: "Thanh trượt điều khiển thời gian thực đại diện cho các giá trị sai lệch vector trên Firestore",
+    axisX: "Sai lệch X (Chiều rộng tai)",
+    axisY: "Sai lệch Y (Độ cao dọc)",
+    axisZ: "Sai lệch Z (Chiều sâu trục)",
+    scale: "Tỉ lệ kích thước",
+    pitch: "Góc nghiêng Pitch (độ)",
+    yaw: "Góc xoay Yaw (độ)",
+    roll: "Góc cuộn Roll (độ)",
+    verifyAnchorBtn: "Xác Minh Cấu Hình Điểm Neo Di Động",
+    studioTitle: "Bộ Công Cụ Thiết Kế Nền Ảnh AI",
+    studioSubtitle: "Cung cấp các công cụ nâng cao chất lượng ảnh sản phẩm. Tải lên ảnh trang sức thô và dùng prompt AI để thay đổi ảnh nền.",
+    studioUpload: "Chọn Ảnh Trang Sức Thô",
+    studioNoImage: "Chưa có hình ảnh sản phẩm trang sức nào được tải lên.",
+    studioPrompt: "Từ Khóa Prompt Tạo Nền AI Tùy Chỉnh",
+    studioPromptPlaceholder: "Mô tả bệ đá sang trọng, phản chiếu ánh sáng, bóng đổ đổ bóng, chất liệu nền...",
+    studioEnhance: "Tạo Ảnh Nền Nghệ Thuật Bằng AI",
+    studioEnhancing: "Đang tạo ảnh nền nghệ thuật trên máy chủ đám mây...",
+    studioLoaded: "Đã tải lên ảnh sản phẩm",
+    studioRemove: "Gỡ bỏ ảnh",
+    studioSupports: "Hỗ trợ tệp định dạng JPG, PNG, WEBP",
+    studioPresets: "Chọn Giao Diện Nền Studio Cao Cấp:",
+    studioCompleted: "Hoàn tất tạo ảnh nền nghệ thuật bằng AI!",
+    splitLabel: "Thanh so sánh trước sau:",
+    beforeText: "ẢNH GỐC THÔ",
+    afterText: "NỀN AI SÁNG TẠO",
+    ear: "Tai (Thử khuyên tai ảo)",
+    finger: "Ngón Tay (Thử nhẫn ảo)",
+    neck: "Cổ (Thử vòng cổ ảo)",
+    wrist: "Cổ Tay (Thử vòng tay ảo)"
+  }
+};
+
+export default function ArMediaHub({ locale = 'en' }) {
+  const t = translations[locale] || translations.en;
+  
   // --- 3D AR Asset Hub State ---
   const [modelFile, setModelFile] = useState(null);
   const [anchorType, setAnchorType] = useState('Finger'); // 'Ear' | 'Finger' | 'Neck' | 'Wrist'
@@ -110,8 +221,8 @@ export default function ArMediaHub() {
     <div>
       <div className="header-bar">
         <div>
-          <h1 className="page-title" style={{ fontSize: '2.25rem', color: 'var(--text-primary)' }}>AR & AI Media Studio</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '6px' }}>Manage 3D augmented reality models and run visual generative background assets</p>
+          <h1 className="page-title" style={{ fontSize: '2.25rem', color: 'var(--text-primary)' }}>{t.title}</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '6px' }}>{t.subtitle}</p>
         </div>
       </div>
 
@@ -121,10 +232,10 @@ export default function ArMediaHub() {
         <div className="glass-panel" style={{ padding: '32px' }}>
           <h2 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '8px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Box size={22} color="var(--gold-primary)" />
-            3D AR Asset Coordinator
+            {t.anchorTitle}
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '24px' }}>
-            Upload virtual assets, fine-tune spatial coordinates for mobile rendering, and optimize models using Draco Compression.
+            {t.anchorSubtitle}
           </p>
 
           {/* Model Upload Area */}
@@ -146,10 +257,10 @@ export default function ArMediaHub() {
             />
             <Upload size={32} color="var(--gold-primary)" style={{ margin: '0 auto 12px', opacity: 0.8 }} />
             <p style={{ fontWeight: '600', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
-              {modelFile ? modelFile.name : 'Choose a .GLTF or .GLB file'}
+              {modelFile ? modelFile.name : t.anchorChoose}
             </p>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', marginTop: '4px' }}>
-              Drag and drop your 3D jewelry asset here (Max 50MB)
+              {t.anchorDragDrop}
             </p>
           </div>
 
@@ -164,12 +275,12 @@ export default function ArMediaHub() {
                 {compressing ? (
                   <>
                     <RefreshCw size={16} className="spin" style={{ marginRight: '6px' }} />
-                    Running Compression...
+                    {t.dracoCompacting}
                   </>
                 ) : (
                   <>
                     <Cpu size={16} style={{ marginRight: '6px' }} />
-                    Run Draco Pipeline
+                    {t.dracoBtn}
                   </>
                 )}
               </button>
@@ -180,7 +291,7 @@ export default function ArMediaHub() {
           {compressing && (
             <div className="glass-panel" style={{ background: '#0D0D0E', border: '1px solid rgba(212,175,55,0.1)', marginBottom: '24px', padding: '16px 20px' }}>
               <p style={{ fontSize: '0.8rem', color: 'var(--gold-primary)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Cpu size={14} className="spin" /> Optimize mesh densities, compress vertices, packing buffers...
+                <Cpu size={14} className="spin" /> {t.dracoLog}
               </p>
               <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '10px', height: '4px', marginTop: '10px', overflow: 'hidden' }}>
                 <div style={{ background: 'var(--gold-primary)', height: '100%', width: '65%', animation: 'pulse 1.5s infinite' }} />
@@ -194,19 +305,19 @@ export default function ArMediaHub() {
                 <span className="badge badge-success" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <CheckCircle size={12} /> {compressionResult.status}
                 </span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Delay: {compressionResult.processingTime}ms</span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{t.dracoDelay}: {compressionResult.processingTime}ms</span>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', textAlign: 'center' }}>
                 <div style={{ borderRight: '1px solid rgba(255,255,255,0.05)' }}>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Raw Mesh Size</p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t.dracoOrig}</p>
                   <p style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--text-primary)', marginTop: '4px' }}>{compressionResult.rawSize} MB</p>
                 </div>
                 <div style={{ borderRight: '1px solid rgba(255,255,255,0.05)' }}>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Compressed Size</p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t.dracoOpt}</p>
                   <p style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--gold-primary)', marginTop: '4px' }}>{compressionResult.optimizedSize} MB</p>
                 </div>
                 <div>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Bandwidth Saved</p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t.dracoSave}</p>
                   <p style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--accent-green)', marginTop: '4px' }}>-{compressionResult.savingsRatio}%</p>
                 </div>
               </div>
@@ -216,16 +327,16 @@ export default function ArMediaHub() {
           {/* Core Target Anchor Configurations */}
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '24px' }}>
             <div className="form-group">
-              <label className="form-label">Augmented Reality Anchor Type</label>
+              <label className="form-label">{t.anchorLabel}</label>
               <select 
                 className="form-select" 
                 value={anchorType}
                 onChange={e => setAnchorType(e.target.value)}
               >
-                <option value="Ear">Ear (Anchored Earring Try-on)</option>
-                <option value="Finger">Finger (Anchored Ring Try-on)</option>
-                <option value="Neck">Neck (Anchored Necklace Try-on)</option>
-                <option value="Wrist">Wrist (Anchored Bracelet Try-on)</option>
+                <option value="Ear">{t.ear}</option>
+                <option value="Finger">{t.finger}</option>
+                <option value="Neck">{t.neck}</option>
+                <option value="Wrist">{t.wrist}</option>
               </select>
             </div>
 
@@ -233,14 +344,14 @@ export default function ArMediaHub() {
             <div style={{ marginTop: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
                 <Sliders size={16} color="var(--gold-primary)" />
-                <span style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-primary)' }}>Spatial Positioning Anchors (mm)</span>
+                <span style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-primary)' }}>{t.coordSubtitle}</span>
               </div>
 
               {/* Slider Controls */}
               {['x', 'y', 'z'].map(axis => (
                 <div key={axis} style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
-                  <span style={{ width: '60px', textTransform: 'uppercase', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 'bold' }}>
-                    Offset {axis}:
+                  <span style={{ width: '80px', textTransform: 'uppercase', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 'bold' }}>
+                    {axis === 'x' ? t.axisX : axis === 'y' ? t.axisY : t.axisZ}:
                   </span>
                   <input 
                     type="range" 
@@ -273,7 +384,7 @@ export default function ArMediaHub() {
               {/* Rotation & Scale fine configurations */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }}>
                 <div className="form-group">
-                  <label className="form-label" style={{ fontSize: '0.75rem' }}>Scale multiplier</label>
+                  <label className="form-label" style={{ fontSize: '0.75rem' }}>{t.scale}</label>
                   <input 
                     type="number" 
                     step="0.05"
@@ -284,7 +395,7 @@ export default function ArMediaHub() {
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label" style={{ fontSize: '0.75rem' }}>Rotation Pitch (deg)</label>
+                  <label className="form-label" style={{ fontSize: '0.75rem' }}>{t.pitch}</label>
                   <input 
                     type="number" 
                     value={coordinates.pitch}
@@ -302,7 +413,7 @@ export default function ArMediaHub() {
               style={{ width: '100%', marginTop: '16px', gap: '8px', justifyContent: 'center' }}
             >
               <Eye size={16} />
-              <span>Verify Mobile Anchor Profile</span>
+              <span>{t.verifyAnchorBtn}</span>
             </button>
           </div>
         </div>
@@ -311,10 +422,10 @@ export default function ArMediaHub() {
         <div className="glass-panel" style={{ padding: '32px' }}>
           <h2 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '8px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Sparkles size={22} color="var(--gold-primary)" />
-            AI Background Enhancer Canvas
+            {t.studioTitle}
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '24px' }}>
-            Provide high-end visual product enhancements. Upload a raw jewelry shot and apply generative prompts to replace background textures.
+            {t.studioSubtitle}
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
@@ -337,11 +448,11 @@ export default function ArMediaHub() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', padding: '0 12px' }}>
                   <img src={sourceImage} alt="Raw product" style={{ width: '64px', height: '64px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }} />
                   <div style={{ textAlign: 'left', flex: 1 }}>
-                    <p style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-primary)', wordBreak: 'break-all' }}>Product Image Loaded</p>
+                    <p style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-primary)', wordBreak: 'break-all' }}>{t.studioLoaded}</p>
                     <button 
                       onClick={() => { setSourceImage(null); setEnhancedResult(false); }}
                       style={{ border: 'none', background: 'none', color: '#F44336', fontSize: '0.75rem', cursor: 'pointer', padding: 0, marginTop: '4px' }}
-                    >Remove file</button>
+                    >{t.studioRemove}</button>
                   </div>
                 </div>
               ) : (
@@ -354,26 +465,26 @@ export default function ArMediaHub() {
                     style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }}
                   />
                   <Upload size={24} color="var(--gold-primary)" style={{ marginBottom: '8px', opacity: 0.8 }} />
-                  <p style={{ fontWeight: '600', fontSize: '0.85rem', color: 'var(--text-primary)' }}>Select Raw Product Photo</p>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.7rem', marginTop: '2px' }}>Supports JPG, PNG, WEBP</p>
+                  <p style={{ fontWeight: '600', fontSize: '0.85rem', color: 'var(--text-primary)' }}>{t.studioUpload}</p>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.7rem', marginTop: '2px' }}>{t.studioSupports}</p>
                 </>
               )}
             </div>
 
             {/* Prompt input with preset buttons */}
             <div className="form-group" style={{ marginBottom: 0 }}>
-              <label className="form-label">Generative AI Background Prompt</label>
+              <label className="form-label">{t.studioPrompt}</label>
               <textarea 
                 className="form-textarea" 
                 rows="3" 
-                placeholder="Describe luxurious scenery (plinth textures, surfaces, light rays...)"
+                placeholder={t.studioPromptPlaceholder}
                 value={generativePrompt}
                 onChange={e => setGenerativePrompt(e.target.value)}
                 style={{ fontSize: '0.9rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}
               />
 
               <div style={{ marginTop: '12px' }}>
-                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: '600' }}>Select Premium Studio Presets:</p>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: '600' }}>{t.studioPresets}</p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                   {promptPresets.map(preset => (
                     <button
@@ -410,12 +521,12 @@ export default function ArMediaHub() {
                 {enhancing ? (
                   <>
                     <RefreshCw className="spin" size={16} style={{ marginRight: '6px' }} />
-                    Generating Background in Cloud Engine...
+                    {t.studioEnhancing}
                   </>
                 ) : (
                   <>
                     <Sparkles size={16} style={{ marginRight: '6px' }} />
-                    Enhance Background with Gen-AI
+                    {t.studioEnhance}
                   </>
                 )}
               </button>
@@ -425,7 +536,7 @@ export default function ArMediaHub() {
             {enhancedResult && !enhancing && (
               <div style={{ marginTop: '8px' }}>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: '600', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <CheckCircle size={14} color="var(--accent-green)" /> Generative background replacement completed!
+                  <CheckCircle size={14} color="var(--accent-green)" /> {t.studioCompleted}
                 </p>
 
                 {/* Combined Slider Canvas Container */}
@@ -469,7 +580,7 @@ export default function ArMediaHub() {
                       fontSize: '0.7rem',
                       color: 'var(--gold-primary)',
                       border: '1px solid rgba(212,175,55,0.2)'
-                    }}>AFTER GEN-AI</div>
+                    }}>{t.afterText}</div>
                   </div>
 
                   {/* BEFORE: Raw Photo clipping mask */}
@@ -509,13 +620,13 @@ export default function ArMediaHub() {
                       borderRadius: '4px',
                       fontSize: '0.7rem',
                       color: 'var(--text-secondary)'
-                    }}>BEFORE RAW</div>
+                    }}>{t.beforeText}</div>
                   </div>
                 </div>
 
                 {/* Range Input controlling before/after split percentage */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '12px' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Swipe comparison:</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t.splitLabel}</span>
                   <input 
                     type="range" 
                     min="0" 

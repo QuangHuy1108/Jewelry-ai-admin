@@ -3,7 +3,76 @@ import { db } from '../firebase';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
 
-export default function CouponsManager() {
+const translations = {
+  en: {
+    title: "Coupons & Offers",
+    subtitle: "Issue vouchers, control discount percentages, and establish usage constraints",
+    createCoupon: "Create Coupon",
+    thPromoCode: "Promo Code",
+    thCampaign: "Campaign Tagline",
+    thDiscount: "Discount Value",
+    thMinSpend: "Min Spend",
+    thRedemptions: "Redemptions",
+    thStatus: "Status",
+    thActions: "Actions",
+    noCoupons: 'No promotional vouchers configured. Click "Create Coupon" to begin.',
+    generalOffer: "General Offer",
+    active: "Active",
+    cappedOut: "Capped Out",
+    expired: "Expired",
+    editPromo: "Edit Promo Code",
+    issueNew: "Issue New Coupon",
+    couponCodeLabel: "Coupon Code *",
+    discountValLabel: "Discount Value (%) *",
+    campaignTitleLabel: "Campaign Tagline / Title *",
+    minOrderLabel: "Minimum Order Threshold ($)",
+    maxRedemptionsLabel: "Maximum Redemptions Cap",
+    activeRedeemable: "Active Redeemable State",
+    cancel: "Cancel",
+    saveChanges: "Save Changes",
+    issueCode: "Issue Code",
+    confirmDelete: "Are you sure you want to delete this promo code?",
+    alertDeleteErr: "Error deleting coupon: ",
+    alertToggleErr: "Error updating coupon state: ",
+    alertSaveErr: "Error saving coupon: "
+  },
+  vi: {
+    title: "Mã Giảm Giá & Ưu Đãi",
+    subtitle: "Phát hành voucher, kiểm soát tỷ lệ giảm giá và thiết lập giới hạn sử dụng",
+    createCoupon: "Tạo Mã Giảm Giá",
+    thPromoCode: "Mã Khuyến Mãi",
+    thCampaign: "Chiến dịch",
+    thDiscount: "Mức Giảm",
+    thMinSpend: "Đơn Tối Thiểu",
+    thRedemptions: "Đã Dùng",
+    thStatus: "Trạng thái",
+    thActions: "Hành động",
+    noCoupons: 'Chưa cấu hình voucher khuyến mãi nào. Hãy bấm "Tạo Mã Giảm Giá" để bắt đầu.',
+    generalOffer: "Ưu đãi chung",
+    active: "Hoạt động",
+    cappedOut: "Hết lượt",
+    expired: "Hết hạn",
+    editPromo: "Sửa Mã Khuyến Mãi",
+    issueNew: "Phát Hành Mã Mới",
+    couponCodeLabel: "Mã Khuyến Mãi *",
+    discountValLabel: "Phần Trăm Giảm Giá (%) *",
+    campaignTitleLabel: "Tên Chiến Dịch / Tiêu Đề *",
+    minOrderLabel: "Giá Trị Đơn Hàng Tối Thiểu ($)",
+    maxRedemptionsLabel: "Giới Hạn Lượt Sử Dụng",
+    activeRedeemable: "Kích Hoạt Cho Phép Sử Dụng",
+    cancel: "Hủy",
+    saveChanges: "Lưu thay đổi",
+    issueCode: "Phát hành mã",
+    confirmDelete: "Bạn có chắc chắn muốn hủy bỏ và xóa mã khuyến mãi này không?",
+    alertDeleteErr: "Lỗi xóa mã giảm giá: ",
+    alertToggleErr: "Lỗi cập nhật trạng thái mã giảm giá: ",
+    alertSaveErr: "Lỗi lưu mã giảm giá: "
+  }
+};
+
+export default function CouponsManager({ locale = 'en' }) {
+  const t = translations[locale] || translations.en;
+
   const [coupons, setCoupons] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -55,11 +124,11 @@ export default function CouponsManager() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to revoke and delete this promo code?')) {
+    if (window.confirm(t.confirmDelete)) {
       try {
         await deleteDoc(doc(db, 'coupons', id));
       } catch (err) {
-        alert('Error deleting coupon: ' + err.message);
+        alert(t.alertDeleteErr + err.message);
       }
     }
   };
@@ -68,7 +137,7 @@ export default function CouponsManager() {
     try {
       await updateDoc(doc(db, 'coupons', id), { isActive: !currentStatus });
     } catch (err) {
-      alert('Error updating coupon state: ' + err.message);
+      alert(t.alertToggleErr + err.message);
     }
   };
 
@@ -94,7 +163,7 @@ export default function CouponsManager() {
       }
       setIsModalOpen(false);
     } catch (err) {
-      alert('Error saving coupon: ' + err.message);
+      alert(t.alertSaveErr + err.message);
     }
   };
 
@@ -102,12 +171,12 @@ export default function CouponsManager() {
     <div>
       <div className="header-bar">
         <div>
-          <h1 className="page-title">Coupons & Offers</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>Issue vouchers, control discount percentages, and establish usage constraints</p>
+          <h1 className="page-title">{t.title}</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>{t.subtitle}</p>
         </div>
         <button className="btn btn-primary" onClick={openAddModal}>
           <Plus size={18} />
-          <span>Create Coupon</span>
+          <span>{t.createCoupon}</span>
         </button>
       </div>
 
@@ -115,20 +184,20 @@ export default function CouponsManager() {
         <table className="rich-table">
           <thead>
             <tr>
-              <th>Promo Code</th>
-              <th>Campaign Tagline</th>
-              <th>Discount Value</th>
-              <th>Min Spend</th>
-              <th>Redemptions</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th>{t.thPromoCode}</th>
+              <th>{t.thCampaign}</th>
+              <th>{t.thDiscount}</th>
+              <th>{t.thMinSpend}</th>
+              <th>{t.thRedemptions}</th>
+              <th>{t.thStatus}</th>
+              <th>{t.thActions}</th>
             </tr>
           </thead>
           <tbody>
             {coupons.length === 0 ? (
               <tr>
                 <td colSpan="7" style={{ textAlign: 'center', padding: '32px', color: 'var(--text-muted)' }}>
-                  No promotional vouchers configured. Click "Create Coupon" to begin.
+                  {t.noCoupons}
                 </td>
               </tr>
             ) : (
@@ -145,7 +214,7 @@ export default function CouponsManager() {
                       </span>
                     </td>
                     <td style={{ fontWeight: '500', color: 'var(--text-primary)' }}>
-                      {c.title || 'General Offer'}
+                      {c.title || t.generalOffer}
                     </td>
                     <td>
                       <span style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--accent-green)' }}>
@@ -171,7 +240,7 @@ export default function CouponsManager() {
                         }}
                       >
                         <span className={`badge ${c.isActive !== false && !isCapped ? 'badge-success' : 'badge-danger'}`}>
-                          {c.isActive !== false && !isCapped ? 'Active' : (isCapped ? 'Capped Out' : 'Expired')}
+                          {c.isActive !== false && !isCapped ? t.active : (isCapped ? t.cappedOut : t.expired)}
                         </span>
                       </button>
                     </td>
@@ -198,7 +267,7 @@ export default function CouponsManager() {
         <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3 className="modal-title">{editingId ? 'Edit Promo Code' : 'Issue New Coupon'}</h3>
+              <h3 className="modal-title">{editingId ? t.editPromo : t.issueNew}</h3>
               <button 
                 style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', fontSize: '1.5rem', cursor: 'pointer' }}
                 onClick={() => setIsModalOpen(false)}
@@ -210,7 +279,7 @@ export default function CouponsManager() {
             <form onSubmit={handleSubmit}>
               <div style={{ display: 'flex', gap: '16px' }}>
                 <div className="form-group" style={{ flex: 1 }}>
-                  <label className="form-label">Coupon Code *</label>
+                  <label className="form-label">{t.couponCodeLabel}</label>
                   <input 
                     type="text" 
                     className="form-input" 
@@ -222,7 +291,7 @@ export default function CouponsManager() {
                   />
                 </div>
                 <div className="form-group" style={{ flex: 1 }}>
-                  <label className="form-label">Discount Value (%) *</label>
+                  <label className="form-label">{t.discountValLabel}</label>
                   <input 
                     type="number" 
                     className="form-input" 
@@ -235,7 +304,7 @@ export default function CouponsManager() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Campaign Tagline / Title *</label>
+                <label className="form-label">{t.campaignTitleLabel}</label>
                 <input 
                   type="text" 
                   className="form-input" 
@@ -248,7 +317,7 @@ export default function CouponsManager() {
 
               <div style={{ display: 'flex', gap: '16px' }}>
                 <div className="form-group" style={{ flex: 1 }}>
-                  <label className="form-label">Minimum Order Threshold ($)</label>
+                  <label className="form-label">{t.minOrderLabel}</label>
                   <input 
                     type="number" 
                     step="0.01" 
@@ -259,7 +328,7 @@ export default function CouponsManager() {
                   />
                 </div>
                 <div className="form-group" style={{ flex: 1 }}>
-                  <label className="form-label">Maximum Redemptions Cap</label>
+                  <label className="form-label">{t.maxRedemptionsLabel}</label>
                   <input 
                     type="number" 
                     className="form-input" 
@@ -277,13 +346,13 @@ export default function CouponsManager() {
                     checked={formData.isActive} 
                     onChange={e => setFormData({...formData, isActive: e.target.checked})}
                   />
-                  <span style={{ fontSize: '0.95rem' }}>Active Redeemable State</span>
+                  <span style={{ fontSize: '0.95rem' }}>{t.activeRedeemable}</span>
                 </label>
               </div>
 
               <div className="form-actions">
-                <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">{editingId ? 'Save Changes' : 'Issue Code'}</button>
+                <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>{t.cancel}</button>
+                <button type="submit" className="btn btn-primary">{editingId ? t.saveChanges : t.issueCode}</button>
               </div>
             </form>
           </div>

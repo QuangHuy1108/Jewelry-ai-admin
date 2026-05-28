@@ -28,7 +28,70 @@ import {
   ComposedChart
 } from 'recharts';
 
-export default function DashboardStats() {
+const translations = {
+  en: {
+    title: "Dashboard Overview",
+    subtitle: "Real-time business performance & AI Try-On analytics",
+    engine: "Obsidian Gold Engine v1.0",
+    revenue: "Total Revenue",
+    orders: "Active Orders",
+    items: "Catalog Items",
+    customers: "Registered Customers",
+    analyticsTitle: "Interactive Analytics Center",
+    analyticsSubtitle: "Analyze product flows, multi-vendor performance and AI engagement trends",
+    productType: "Product Type",
+    sellers: "Sellers",
+    aiTryOn: "AI Try-On",
+    insightsTitle: "System Insights",
+    insightsPending: "Orders Awaiting Fulfillment",
+    insightsPerf: "System Performance",
+    insightsPerfVal: "Optimal (99.98%)",
+    insightsSync: "Sync Status",
+    insightsSyncVal: "Live Connection",
+    chartTitle: "Performance Metrics",
+    // Chart keys
+    rings: "Rings",
+    necklaces: "Necklaces",
+    aiDesign: "AI Design",
+    customUserDesigns: "Custom User Designs",
+    tryOnClicks: "Try-On Clicks",
+    cartAdditions: "Cart Additions",
+    conversionRate: "Conversion Rate"
+  },
+  vi: {
+    title: "Bảng Điều Khiển Tổng Quan",
+    subtitle: "Hiệu suất kinh doanh thực tế & Phân tích Thử đồ ảo AI",
+    engine: "Obsidian Gold Engine v1.0",
+    revenue: "Tổng Doanh Thu",
+    orders: "Đơn Hàng Đang Xử Lý",
+    items: "Số Lượng Sản Phẩm",
+    customers: "Khách Hàng Đăng Ký",
+    analyticsTitle: "Trung Tâm Phân Tích Số Liệu",
+    analyticsSubtitle: "Đánh giá luồng sản phẩm, hiệu suất của nhà bán hàng lẻ và xu hướng tương tác AI",
+    productType: "Loại Sản Phẩm",
+    sellers: "Nhà Bán Hàng",
+    aiTryOn: "Thử Đồ AI",
+    insightsTitle: "Thông Tin Hệ Thống",
+    insightsPending: "Đơn Hàng Chờ Hoàn Thành",
+    insightsPerf: "Hiệu Suất Hệ Thống",
+    insightsPerfVal: "Tối Ưu (99.98%)",
+    insightsSync: "Trạng Thái Đồng Bộ",
+    insightsSyncVal: "Kết Nối Trực Tiếp",
+    chartTitle: "Chỉ Số Hiệu Suất",
+    // Chart keys
+    rings: "Nhẫn",
+    necklaces: "Vòng Cổ",
+    aiDesign: "Thiết Kế AI",
+    customUserDesigns: "Thiết Kế Tùy Chọn",
+    tryOnClicks: "Lượt Thử Đồ",
+    cartAdditions: "Thêm Vào Giỏ",
+    conversionRate: "Tỷ Lệ Chuyển Đổi"
+  }
+};
+
+export default function DashboardStats({ locale = 'en' }) {
+  const t = translations[locale] || translations.en;
+
   const [stats, setStats] = useState({
     totalRevenue: 0,
     totalOrders: 0,
@@ -77,41 +140,50 @@ export default function DashboardStats() {
   }, []);
 
   const statCards = [
-    { label: 'Total Revenue', value: `$${stats.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, icon: DollarSign },
-    { label: 'Active Orders', value: stats.totalOrders, icon: ShoppingBag },
-    { label: 'Catalog Items', value: stats.totalProducts, icon: Package },
-    { label: 'Registered Customers', value: stats.totalUsers, icon: Users },
+    { label: t.revenue, value: `$${stats.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, icon: DollarSign },
+    { label: t.orders, value: stats.totalOrders, icon: ShoppingBag },
+    { label: t.items, value: stats.totalProducts, icon: Package },
+    { label: t.customers, value: stats.totalUsers, icon: Users },
   ];
 
   // Axis 1: Revenue by Product Type
   const productTypeData = [
-    { month: 'Jan', Rings: 18000, Necklaces: 12000, 'AI Design': 5000 },
-    { month: 'Feb', Rings: 22000, Necklaces: 15000, 'AI Design': 9000 },
-    { month: 'Mar', Rings: 25000, Necklaces: 18000, 'AI Design': 14000 },
-    { month: 'Apr', Rings: 29000, Necklaces: 21000, 'AI Design': 22000 },
-    { month: 'May', Rings: 35000, Necklaces: 24000, 'AI Design': 31000 },
-    { month: 'Jun', Rings: 42000, Necklaces: 28000, 'AI Design': 45000 },
+    { month: 'Jan', [t.rings]: 18000, [t.necklaces]: 12000, [t.aiDesign]: 5000 },
+    { month: 'Feb', [t.rings]: 22000, [t.necklaces]: 15000, [t.aiDesign]: 9000 },
+    { month: 'Mar', [t.rings]: 25000, [t.necklaces]: 18000, [t.aiDesign]: 14000 },
+    { month: 'Apr', [t.rings]: 29000, [t.necklaces]: 21000, [t.aiDesign]: 22000 },
+    { month: 'May', [t.rings]: 35000, [t.necklaces]: 24000, [t.aiDesign]: 31000 },
+    { month: 'Jun', [t.rings]: 42000, [t.necklaces]: 28000, [t.aiDesign]: 45000 },
   ];
 
   // Axis 2: Revenue by Vendor (Sellers)
   const vendorData = [
-    { month: 'Jan', 'GlowUp Elite': 15000, 'Orion Jewels': 12000, 'Aurum Designs': 6000, 'Custom User Designs': 2000 },
-    { month: 'Feb', 'GlowUp Elite': 19000, 'Orion Jewels': 14000, 'Aurum Designs': 9000, 'Custom User Designs': 4000 },
-    { month: 'Mar', 'GlowUp Elite': 21000, 'Orion Jewels': 17000, 'Aurum Designs': 12000, 'Custom User Designs': 7000 },
-    { month: 'Apr', 'GlowUp Elite': 26000, 'Orion Jewels': 20000, 'Aurum Designs': 16000, 'Custom User Designs': 10000 },
-    { month: 'May', 'GlowUp Elite': 31000, 'Orion Jewels': 23000, 'Aurum Designs': 21000, 'Custom User Designs': 15000 },
-    { month: 'Jun', 'GlowUp Elite': 38000, 'Orion Jewels': 29000, 'Aurum Designs': 28000, 'Custom User Designs': 20000 },
+    { month: 'Jan', 'GlowUp Elite': 15000, 'Orion Jewels': 12000, 'Aurum Designs': 6000, [t.customUserDesigns]: 2000 },
+    { month: 'Feb', 'GlowUp Elite': 19000, 'Orion Jewels': 14000, 'Aurum Designs': 9000, [t.customUserDesigns]: 4000 },
+    { month: 'Mar', 'GlowUp Elite': 21000, 'Orion Jewels': 17000, 'Aurum Designs': 12000, [t.customUserDesigns]: 7000 },
+    { month: 'Apr', 'GlowUp Elite': 26000, 'Orion Jewels': 20000, 'Aurum Designs': 16000, [t.customUserDesigns]: 10000 },
+    { month: 'May', 'GlowUp Elite': 31000, 'Orion Jewels': 23000, 'Aurum Designs': 21000, [t.customUserDesigns]: 15000 },
+    { month: 'Jun', 'GlowUp Elite': 38000, 'Orion Jewels': 29000, 'Aurum Designs': 28000, [t.customUserDesigns]: 20000 },
   ];
 
   // Axis 3: Try-On Feature Conversion Rate
   const tryOnData = [
-    { month: 'Jan', 'Try-On Clicks': 2500, 'Cart Additions': 600, 'Conversion Rate': 24.0 },
-    { month: 'Feb', 'Try-On Clicks': 3200, 'Cart Additions': 820, 'Conversion Rate': 25.6 },
-    { month: 'Mar', 'Try-On Clicks': 4100, 'Cart Additions': 1100, 'Conversion Rate': 26.8 },
-    { month: 'Apr', 'Try-On Clicks': 5500, 'Cart Additions': 1550, 'Conversion Rate': 28.1 },
-    { month: 'May', 'Try-On Clicks': 7200, 'Cart Additions': 2160, 'Conversion Rate': 30.0 },
-    { month: 'Jun', 'Try-On Clicks': 9500, 'Cart Additions': 3040, 'Conversion Rate': 32.0 },
+    { month: 'Jan', [t.tryOnClicks]: 2500, [t.cartAdditions]: 600, [t.conversionRate]: 24.0 },
+    { month: 'Feb', [t.tryOnClicks]: 3200, [t.cartAdditions]: 820, [t.conversionRate]: 25.6 },
+    { month: 'Mar', [t.tryOnClicks]: 4100, [t.cartAdditions]: 1100, [t.conversionRate]: 26.8 },
+    { month: 'Apr', [t.tryOnClicks]: 5500, [t.cartAdditions]: 1550, [t.conversionRate]: 28.1 },
+    { month: 'May', [t.tryOnClicks]: 7200, [t.cartAdditions]: 2160, [t.conversionRate]: 30.0 },
+    { month: 'Jun', [t.tryOnClicks]: 9500, [t.cartAdditions]: 3040, [t.conversionRate]: 32.0 },
   ];
+
+  // Month formatter for charts
+  const formatMonth = (m) => {
+    if (locale === 'vi') {
+      const viMonths = { Jan: 'Thg 1', Feb: 'Thg 2', Mar: 'Thg 3', Apr: 'Thg 4', May: 'Thg 5', Jun: 'Thg 6' };
+      return viMonths[m] || m;
+    }
+    return m;
+  };
 
   // Custom tooltips matching the premium luxury obsidian style
   const CustomTooltip = ({ active, payload, label }) => {
@@ -133,7 +205,7 @@ export default function DashboardStats() {
             paddingBottom: '6px',
             fontFamily: 'Outfit, sans-serif'
           }}>
-            {label} ✦ Performance Metrics
+            {formatMonth(label)} ✦ {t.chartTitle}
           </p>
           {payload.map((p, idx) => (
             <p key={idx} style={{ 
@@ -151,9 +223,9 @@ export default function DashboardStats() {
                 <span>{p.name}:</span>
               </span>
               <span style={{ fontWeight: '700', color: 'var(--text-primary)' }}>
-                {p.name.includes('Rate') || p.name.includes('Conversion') 
+                {p.name.includes('Rate') || p.name.includes('Tỷ Lệ') || p.name.includes('Conversion') 
                   ? `${p.value}%` 
-                  : p.name.includes('Clicks') || p.name.includes('Additions') 
+                  : p.name.includes('Clicks') || p.name.includes('Lượt') || p.name.includes('Additions') || p.name.includes('Thêm')
                     ? p.value.toLocaleString() 
                     : `$${p.value.toLocaleString()}`}
               </span>
@@ -194,9 +266,9 @@ export default function DashboardStats() {
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend wrapperStyle={{ fontFamily: 'Outfit', fontSize: '0.85rem', paddingTop: '10px' }} />
-              <Area type="monotone" dataKey="Rings" stroke="#a1a1aa" strokeWidth={2} fillOpacity={1} fill="url(#colorRings)" />
-              <Area type="monotone" dataKey="Necklaces" stroke="#B59410" strokeWidth={2} fillOpacity={1} fill="url(#colorNecklaces)" />
-              <Area type="monotone" dataKey="AI Design" stroke="#D4AF37" strokeWidth={2} fillOpacity={1} fill="url(#colorAi)" />
+              <Area type="monotone" dataKey={t.rings} stroke="#a1a1aa" strokeWidth={2} fillOpacity={1} fill="url(#colorRings)" />
+              <Area type="monotone" dataKey={t.necklaces} stroke="#B59410" strokeWidth={2} fillOpacity={1} fill="url(#colorNecklaces)" />
+              <Area type="monotone" dataKey={t.aiDesign} stroke="#D4AF37" strokeWidth={2} fillOpacity={1} fill="url(#colorAi)" />
             </AreaChart>
           </ResponsiveContainer>
         );
@@ -216,7 +288,7 @@ export default function DashboardStats() {
               <Bar dataKey="GlowUp Elite" fill="#D4AF37" radius={[4, 4, 0, 0]} />
               <Bar dataKey="Orion Jewels" fill="#a1a1aa" radius={[4, 4, 0, 0]} />
               <Bar dataKey="Aurum Designs" fill="#B59410" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Custom User Designs" fill="#52525b" radius={[4, 4, 0, 0]} />
+              <Bar dataKey={t.customUserDesigns} fill="#52525b" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         );
@@ -246,9 +318,9 @@ export default function DashboardStats() {
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend wrapperStyle={{ fontFamily: 'Outfit', fontSize: '0.85rem', paddingTop: '10px' }} />
-              <Area yAxisId="left" type="monotone" dataKey="Try-On Clicks" fill="url(#colorClicks)" stroke="#312e81" strokeWidth={1.5} />
-              <Bar yAxisId="left" dataKey="Cart Additions" fill="#a1a1aa" barSize={20} radius={[4, 4, 0, 0]} />
-              <Line yAxisId="right" type="monotone" dataKey="Conversion Rate" stroke="#D4AF37" strokeWidth={3} activeDot={{ r: 6 }} />
+              <Area yAxisId="left" type="monotone" dataKey={t.tryOnClicks} fill="url(#colorClicks)" stroke="#312e81" strokeWidth={1.5} />
+              <Bar yAxisId="left" dataKey={t.cartAdditions} fill="#a1a1aa" barSize={20} radius={[4, 4, 0, 0]} />
+              <Line yAxisId="right" type="monotone" dataKey={t.conversionRate} stroke="#D4AF37" strokeWidth={3} activeDot={{ r: 6 }} />
             </ComposedChart>
           </ResponsiveContainer>
         );
@@ -261,12 +333,12 @@ export default function DashboardStats() {
     <div>
       <div className="header-bar">
         <div>
-          <h1 className="page-title" style={{ fontSize: '2.25rem', color: 'var(--text-primary)' }}>Dashboard Overview</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '6px' }}>Real-time business performance & AI Try-On analytics</p>
+          <h1 className="page-title" style={{ fontSize: '2.25rem', color: 'var(--text-primary)' }}>{t.title}</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '6px' }}>{t.subtitle}</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.8rem', background: 'rgba(212, 175, 55, 0.06)', padding: '8px 14px', borderRadius: '30px', border: '1px solid rgba(212, 175, 55, 0.15)', color: 'var(--gold-primary)' }}>
           <Sparkles size={14} />
-          <span>Obsidian Gold Engine v1.0</span>
+          <span>{t.engine}</span>
         </div>
       </div>
 
@@ -281,7 +353,7 @@ export default function DashboardStats() {
                   fontSize: '2.1rem', 
                   fontFamily: 'Outfit, sans-serif',
                   fontWeight: '700',
-                  color: card.label.includes('Revenue') ? 'var(--gold-primary)' : 'var(--text-primary)',
+                  color: card.label === t.revenue ? 'var(--gold-primary)' : 'var(--text-primary)',
                   marginTop: '6px'
                 }}>
                   {card.value}
@@ -301,17 +373,17 @@ export default function DashboardStats() {
           <div>
             <h2 style={{ fontSize: '1.45rem', fontWeight: '700', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <TrendingUp size={22} color="var(--gold-primary)" />
-              Interactive Analytics Center
+              {t.analyticsTitle}
             </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '4px' }}>Analyze product flows, multi-vendor performance and AI engagement trends</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '4px' }}>{t.analyticsSubtitle}</p>
           </div>
 
           {/* Controls */}
           <div style={{ display: 'flex', gap: '8px', background: 'rgba(0, 0, 0, 0.3)', padding: '4px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
             {[
-              { id: 'productType', label: 'Product Type', icon: Layers },
-              { id: 'vendor', label: 'Sellers', icon: Store },
-              { id: 'tryOn', label: 'AI Try-On', icon: Sparkles },
+              { id: 'productType', label: t.productType, icon: Layers },
+              { id: 'vendor', label: t.sellers, icon: Store },
+              { id: 'tryOn', label: t.aiTryOn, icon: Sparkles },
             ].map((btn) => {
               const Icon = btn.icon;
               const isSelected = activeAxis === btn.id;
@@ -350,20 +422,20 @@ export default function DashboardStats() {
 
       <div className="glass-panel" style={{ marginTop: '28px' }}>
         <h2 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '20px', color: 'var(--gold-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          System Insights
+          {t.insightsTitle}
         </h2>
         <div style={{ display: 'flex', gap: '48px', flexWrap: 'wrap' }}>
           <div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Orders Awaiting Fulfillment</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{t.insightsPending}</p>
             <p style={{ fontSize: '1.65rem', fontWeight: '700', color: 'var(--accent-orange)', marginTop: '4px' }}>{stats.pendingOrders}</p>
           </div>
           <div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>System Performance</p>
-            <p style={{ fontSize: '1.65rem', fontWeight: '700', color: 'var(--accent-green)', marginTop: '4px' }}>Optimal (99.98%)</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{t.insightsPerf}</p>
+            <p style={{ fontSize: '1.65rem', fontWeight: '700', color: 'var(--accent-green)', marginTop: '4px' }}>{t.insightsPerfVal}</p>
           </div>
           <div>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Sync Status</p>
-            <p style={{ fontSize: '1.65rem', fontWeight: '700', color: 'var(--accent-blue)', marginTop: '4px' }}>Live Connection</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{t.insightsSync}</p>
+            <p style={{ fontSize: '1.65rem', fontWeight: '700', color: 'var(--accent-blue)', marginTop: '4px' }}>{t.insightsSyncVal}</p>
           </div>
         </div>
       </div>

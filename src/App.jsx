@@ -81,21 +81,21 @@ export default function App() {
   const renderContent = () => {
     switch (currentTab) {
       case 'dashboard':
-        return <DashboardStats />;
+        return <DashboardStats locale={locale} />;
       case 'products':
-        return <ProductsManager />;
+        return <ProductsManager locale={locale} />;
       case 'categories':
-        return <CategoriesManager />;
+        return <CategoriesManager locale={locale} />;
       case 'banners':
-        return <BannersManager />;
+        return <BannersManager locale={locale} />;
       case 'orders':
-        return <OrdersManager />;
+        return <OrdersManager locale={locale} />;
       case 'coupons':
-        return <CouponsManager />;
+        return <CouponsManager locale={locale} />;
       case 'users':
-        return <UsersManager />;
+        return <UsersManager locale={locale} />;
       case 'seller-applications':
-        return <SellerApplicationsManager />;
+        return <SellerApplicationsManager locale={locale} />;
       case 'ar-media-hub':
         return <ArMediaHub locale={locale} />;
       case 'ai-custom-designs':

@@ -3,7 +3,82 @@ import { db } from '../firebase';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { Plus, Edit2, Trash2, Search, Image as ImageIcon } from 'lucide-react';
 
-export default function ProductsManager() {
+const translations = {
+  en: {
+    title: "Products Management",
+    subtitle: "Add, update, and monitor product catalog inventory",
+    addProduct: "Add Product",
+    searchPlaceholder: "Search products by name or category...",
+    thProduct: "Product",
+    thCategory: "Category",
+    thPrice: "Price",
+    thStock: "Stock",
+    thStatus: "Status",
+    thActions: "Actions",
+    noProducts: 'No products found. Click "Add Product" to create one.',
+    active: "Active",
+    inactive: "Inactive",
+    editProduct: "Edit Product",
+    addNewProduct: "Add New Product",
+    productNameLabel: "Product Name *",
+    priceLabel: "Regular Price ($) *",
+    discountPriceLabel: "Discount Price ($)",
+    categoryLabel: "Category *",
+    stockLabel: "Stock Quantity *",
+    materialLabel: "Material Description",
+    imagesLabel: "Image URLs (comma separated) *",
+    imagesHelp: "Provide accessible public image URLs for premium visual display.",
+    sizesLabel: "Available Sizes (comma separated)",
+    descriptionLabel: "Description",
+    descPlaceholder: "Detailed description detailing premium elegance and craftsmanship...",
+    badgeBestSeller: "Best Seller Badge",
+    badgePopular: "Popular Product",
+    badgeActive: "Active Catalog",
+    cancel: "Cancel",
+    confirmDelete: "Are you sure you want to delete this product?",
+    alertDeleteErr: "Error deleting product: ",
+    alertSaveErr: "Error saving product: "
+  },
+  vi: {
+    title: "Quản Lý Sản Phẩm",
+    subtitle: "Thêm mới, cập nhật và theo dõi số lượng tồn kho sản phẩm",
+    addProduct: "Thêm Sản Phẩm",
+    searchPlaceholder: "Tìm kiếm sản phẩm theo tên hoặc danh mục...",
+    thProduct: "Sản phẩm",
+    thCategory: "Danh mục",
+    thPrice: "Giá tiền",
+    thStock: "Tồn kho",
+    thStatus: "Trạng thái",
+    thActions: "Hành động",
+    noProducts: 'Không tìm thấy sản phẩm nào. Hãy bấm "Thêm Sản Phẩm" để bắt đầu.',
+    active: "Hoạt động",
+    inactive: "Ẩn danh mục",
+    editProduct: "Sửa Sản Phẩm",
+    addNewProduct: "Thêm Sản Phẩm Mới",
+    productNameLabel: "Tên Sản Phẩm *",
+    priceLabel: "Giá Niêm Yết ($) *",
+    discountPriceLabel: "Giá Khuyến Mãi ($)",
+    categoryLabel: "Danh Mục *",
+    stockLabel: "Số Lượng Kho *",
+    materialLabel: "Mô Tả Chất Liệu",
+    imagesLabel: "Đường Dẫn Hình Ảnh (phân tách bằng dấu phẩy) *",
+    imagesHelp: "Cung cấp đường dẫn ảnh công khai để hiển thị chất lượng cao nhất.",
+    sizesLabel: "Các Kích Cỡ Hiện Có (phân tách bằng dấu phẩy)",
+    descriptionLabel: "Mô Tả Chi Tiết",
+    descPlaceholder: "Mô tả chi tiết thể hiện tính thẩm mỹ cao cấp và tay nghề thủ công...",
+    badgeBestSeller: "Nhãn Bán Chạy",
+    badgePopular: "Sản Phẩm Phổ Biến",
+    badgeActive: "Kích Hoạt Hiển Thị",
+    cancel: "Hủy",
+    confirmDelete: "Bạn có chắc chắn muốn xóa sản phẩm này?",
+    alertDeleteErr: "Lỗi xóa sản phẩm: ",
+    alertSaveErr: "Lỗi lưu sản phẩm: "
+  }
+};
+
+export default function ProductsManager({ locale = 'en' }) {
+  const t = translations[locale] || translations.en;
+  
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -75,11 +150,11 @@ export default function ProductsManager() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
+    if (window.confirm(t.confirmDelete)) {
       try {
         await deleteDoc(doc(db, 'products', id));
       } catch (err) {
-        alert('Error deleting product: ' + err.message);
+        alert(t.alertDeleteErr + err.message);
       }
     }
   };
@@ -121,7 +196,7 @@ export default function ProductsManager() {
       }
       setIsModalOpen(false);
     } catch (err) {
-      alert('Error saving product: ' + err.message);
+      alert(t.alertSaveErr + err.message);
     }
   };
 
@@ -134,12 +209,12 @@ export default function ProductsManager() {
     <div>
       <div className="header-bar">
         <div>
-          <h1 className="page-title">Products Management</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>Add, update, and monitor product catalog inventory</p>
+          <h1 className="page-title">{t.title}</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>{t.subtitle}</p>
         </div>
         <button className="btn btn-primary" onClick={openAddModal}>
           <Plus size={18} />
-          <span>Add Product</span>
+          <span>{t.addProduct}</span>
         </button>
       </div>
 
@@ -147,7 +222,7 @@ export default function ProductsManager() {
         <Search size={20} color="var(--text-muted)" />
         <input 
           type="text" 
-          placeholder="Search products by name or category..." 
+          placeholder={t.searchPlaceholder} 
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', width: '100%', outline: 'none', fontSize: '0.95rem' }}
@@ -158,19 +233,19 @@ export default function ProductsManager() {
         <table className="rich-table">
           <thead>
             <tr>
-              <th>Product</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Stock</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th>{t.thProduct}</th>
+              <th>{t.thCategory}</th>
+              <th>{t.thPrice}</th>
+              <th>{t.thStock}</th>
+              <th>{t.thStatus}</th>
+              <th>{t.thActions}</th>
             </tr>
           </thead>
           <tbody>
             {filteredProducts.length === 0 ? (
               <tr>
                 <td colSpan="6" style={{ textAlign: 'center', padding: '32px', color: 'var(--text-muted)' }}>
-                  No products found. Click "Add Product" to create one.
+                  {t.noProducts}
                 </td>
               </tr>
             ) : (
@@ -211,7 +286,7 @@ export default function ProductsManager() {
                   </td>
                   <td>
                     <span className={`badge ${p.isActive !== false ? 'badge-success' : 'badge-danger'}`}>
-                      {p.isActive !== false ? 'Active' : 'Inactive'}
+                      {p.isActive !== false ? t.active : t.inactive}
                     </span>
                   </td>
                   <td>
@@ -236,7 +311,7 @@ export default function ProductsManager() {
         <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3 className="modal-title">{editingId ? 'Edit Product' : 'Add New Product'}</h3>
+              <h3 className="modal-title">{editingId ? t.editProduct : t.addNewProduct}</h3>
               <button 
                 style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', fontSize: '1.5rem', cursor: 'pointer' }}
                 onClick={() => setIsModalOpen(false)}
@@ -247,7 +322,7 @@ export default function ProductsManager() {
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label className="form-label">Product Name *</label>
+                <label className="form-label">{t.productNameLabel}</label>
                 <input 
                   type="text" 
                   className="form-input" 
@@ -260,7 +335,7 @@ export default function ProductsManager() {
 
               <div style={{ display: 'flex', gap: '16px' }}>
                 <div className="form-group" style={{ flex: 1 }}>
-                  <label className="form-label">Regular Price ($) *</label>
+                  <label className="form-label">{t.priceLabel}</label>
                   <input 
                     type="number" 
                     step="0.01" 
@@ -272,7 +347,7 @@ export default function ProductsManager() {
                   />
                 </div>
                 <div className="form-group" style={{ flex: 1 }}>
-                  <label className="form-label">Discount Price ($)</label>
+                  <label className="form-label">{t.discountPriceLabel}</label>
                   <input 
                     type="number" 
                     step="0.01" 
@@ -286,7 +361,7 @@ export default function ProductsManager() {
 
               <div style={{ display: 'flex', gap: '16px' }}>
                 <div className="form-group" style={{ flex: 1 }}>
-                  <label className="form-label">Category *</label>
+                  <label className="form-label">{t.categoryLabel}</label>
                   <select 
                     className="form-select" 
                     value={formData.category}
@@ -299,7 +374,7 @@ export default function ProductsManager() {
                   </select>
                 </div>
                 <div className="form-group" style={{ flex: 1 }}>
-                  <label className="form-label">Stock Quantity *</label>
+                  <label className="form-label">{t.stockLabel}</label>
                   <input 
                     type="number" 
                     className="form-input" 
@@ -311,7 +386,7 @@ export default function ProductsManager() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Material Description</label>
+                <label className="form-label">{t.materialLabel}</label>
                 <input 
                   type="text" 
                   className="form-input" 
@@ -322,7 +397,7 @@ export default function ProductsManager() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Image URLs (comma separated) *</label>
+                <label className="form-label">{t.imagesLabel}</label>
                 <input 
                   type="text" 
                   className="form-input" 
@@ -331,11 +406,11 @@ export default function ProductsManager() {
                   value={formData.images}
                   onChange={e => setFormData({...formData, images: e.target.value})}
                 />
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>Provide accessible public image URLs for premium visual display.</span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>{t.imagesHelp}</span>
               </div>
 
               <div className="form-group">
-                <label className="form-label">Available Sizes (comma separated)</label>
+                <label className="form-label">{t.sizesLabel}</label>
                 <input 
                   type="text" 
                   className="form-input" 
@@ -346,11 +421,11 @@ export default function ProductsManager() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Description</label>
+                <label className="form-label">{t.descriptionLabel}</label>
                 <textarea 
                   className="form-textarea" 
                   rows="3" 
-                  placeholder="Detailed description detailing premium elegance and craftsmanship..."
+                  placeholder={t.descPlaceholder}
                   value={formData.description}
                   onChange={e => setFormData({...formData, description: e.target.value})}
                 ></textarea>
@@ -363,7 +438,7 @@ export default function ProductsManager() {
                     checked={formData.isBestSeller} 
                     onChange={e => setFormData({...formData, isBestSeller: e.target.checked})}
                   />
-                  <span>Best Seller Badge</span>
+                  <span>{t.badgeBestSeller}</span>
                 </label>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>
                   <input 
@@ -371,7 +446,7 @@ export default function ProductsManager() {
                     checked={formData.isPopular} 
                     onChange={e => setFormData({...formData, isPopular: e.target.checked})}
                   />
-                  <span>Popular Product</span>
+                  <span>{t.badgePopular}</span>
                 </label>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem' }}>
                   <input 
@@ -379,13 +454,13 @@ export default function ProductsManager() {
                     checked={formData.isActive} 
                     onChange={e => setFormData({...formData, isActive: e.target.checked})}
                   />
-                  <span>Active Catalog</span>
+                  <span>{t.badgeActive}</span>
                 </label>
               </div>
 
               <div className="form-actions">
-                <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">{editingId ? 'Save Changes' : 'Create Product'}</button>
+                <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>{t.cancel}</button>
+                <button type="submit" className="btn btn-primary">{editingId ? t.saveChanges : t.addProduct}</button>
               </div>
             </form>
           </div>

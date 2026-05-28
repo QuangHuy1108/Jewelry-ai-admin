@@ -3,7 +3,68 @@ import { db } from '../firebase';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { Plus, Edit2, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 
-export default function CategoriesManager() {
+const translations = {
+  en: {
+    title: "Categories Management",
+    subtitle: "Create and reorder navigation taxonomies for the storefront",
+    addCategory: "Add Category",
+    thOrder: "Order",
+    thCover: "Category Cover",
+    thName: "Name",
+    thStatus: "Status",
+    thReorder: "Reorder",
+    thActions: "Actions",
+    noCategories: 'No categories defined. Click "Add Category" to initialize setup.',
+    noCover: "No Cover",
+    active: "Active",
+    hidden: "Hidden",
+    editCategory: "Edit Category",
+    addNewCategory: "Add New Category",
+    categoryNameLabel: "Category Name *",
+    coverUrlLabel: "Cover Image URL *",
+    displayOrderLabel: "Display Order",
+    visibleLabel: "Visible on Home Feed & Catalog",
+    cancel: "Cancel",
+    saveChanges: "Save Changes",
+    createCategory: "Create Category",
+    confirmDelete: "Are you sure you want to delete this category?",
+    alertDeleteErr: "Error deleting category: ",
+    alertOrderErr: "Error updating order: ",
+    alertSaveErr: "Error saving category: "
+  },
+  vi: {
+    title: "Quản Lý Danh Mục",
+    subtitle: "Tạo mới và sắp xếp thứ tự danh mục điều hướng cho cửa hàng",
+    addCategory: "Thêm Danh Mục",
+    thOrder: "Thứ tự",
+    thCover: "Ảnh bìa",
+    thName: "Tên danh mục",
+    thStatus: "Trạng thái",
+    thReorder: "Sắp xếp",
+    thActions: "Hành động",
+    noCategories: 'Chưa có danh mục nào. Bấm "Thêm Danh Mục" để bắt đầu thiết lập.',
+    noCover: "Không có ảnh bìa",
+    active: "Hoạt động",
+    hidden: "Đang ẩn",
+    editCategory: "Sửa Danh Mục",
+    addNewCategory: "Thêm Danh Mục Mới",
+    categoryNameLabel: "Tên Danh Mục *",
+    coverUrlLabel: "Đường Dẫn Ảnh Bìa *",
+    displayOrderLabel: "Thứ Tự Hiển Thị",
+    visibleLabel: "Hiển thị trên Trang chủ & Danh mục",
+    cancel: "Hủy",
+    saveChanges: "Lưu thay đổi",
+    createCategory: "Tạo danh mục",
+    confirmDelete: "Bạn có chắc chắn muốn xóa danh mục này?",
+    alertDeleteErr: "Lỗi xóa danh mục: ",
+    alertOrderErr: "Lỗi cập nhật thứ tự: ",
+    alertSaveErr: "Lỗi lưu danh mục: "
+  }
+};
+
+export default function CategoriesManager({ locale = 'en' }) {
+  const t = translations[locale] || translations.en;
+
   const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -49,11 +110,11 @@ export default function CategoriesManager() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this category?')) {
+    if (window.confirm(t.confirmDelete)) {
       try {
         await deleteDoc(doc(db, 'categories', id));
       } catch (err) {
-        alert('Error deleting category: ' + err.message);
+        alert(t.alertDeleteErr + err.message);
       }
     }
   };
@@ -72,7 +133,7 @@ export default function CategoriesManager() {
       await updateDoc(doc(db, 'categories', currentItem.id), { order: targetOrder });
       await updateDoc(doc(db, 'categories', targetItem.id), { order: currentOrder });
     } catch (err) {
-      alert('Error updating order: ' + err.message);
+      alert(t.alertOrderErr + err.message);
     }
   };
 
@@ -95,7 +156,7 @@ export default function CategoriesManager() {
       }
       setIsModalOpen(false);
     } catch (err) {
-      alert('Error saving category: ' + err.message);
+      alert(t.alertSaveErr + err.message);
     }
   };
 
@@ -103,12 +164,12 @@ export default function CategoriesManager() {
     <div>
       <div className="header-bar">
         <div>
-          <h1 className="page-title">Categories Management</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>Create and reorder navigation taxonomies for the storefront</p>
+          <h1 className="page-title">{t.title}</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>{t.subtitle}</p>
         </div>
         <button className="btn btn-primary" onClick={openAddModal}>
           <Plus size={18} />
-          <span>Add Category</span>
+          <span>{t.addCategory}</span>
         </button>
       </div>
 
@@ -116,19 +177,19 @@ export default function CategoriesManager() {
         <table className="rich-table">
           <thead>
             <tr>
-              <th>Order</th>
-              <th>Category Cover</th>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Reorder</th>
-              <th>Actions</th>
+              <th>{t.thOrder}</th>
+              <th>{t.thCover}</th>
+              <th>{t.thName}</th>
+              <th>{t.thStatus}</th>
+              <th>{t.thReorder}</th>
+              <th>{t.thActions}</th>
             </tr>
           </thead>
           <tbody>
             {categories.length === 0 ? (
               <tr>
                 <td colSpan="6" style={{ textAlign: 'center', padding: '32px', color: 'var(--text-muted)' }}>
-                  No categories defined. Click "Add Category" to initialize setup.
+                  {t.noCategories}
                 </td>
               </tr>
             ) : (
@@ -144,7 +205,7 @@ export default function CategoriesManager() {
                       />
                     ) : (
                       <div style={{ width: '60px', height: '40px', background: '#27272a', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                        No Cover
+                        {t.noCover}
                       </div>
                     )}
                   </td>
@@ -153,7 +214,7 @@ export default function CategoriesManager() {
                   </td>
                   <td>
                     <span className={`badge ${c.isActive !== false ? 'badge-success' : 'badge-danger'}`}>
-                      {c.isActive !== false ? 'Active' : 'Hidden'}
+                      {c.isActive !== false ? t.active : t.hidden}
                     </span>
                   </td>
                   <td>
@@ -198,7 +259,7 @@ export default function CategoriesManager() {
         <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3 className="modal-title">{editingId ? 'Edit Category' : 'Add New Category'}</h3>
+              <h3 className="modal-title">{editingId ? t.editCategory : t.addNewCategory}</h3>
               <button 
                 style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', fontSize: '1.5rem', cursor: 'pointer' }}
                 onClick={() => setIsModalOpen(false)}
@@ -209,7 +270,7 @@ export default function CategoriesManager() {
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label className="form-label">Category Name *</label>
+                <label className="form-label">{t.categoryNameLabel}</label>
                 <input 
                   type="text" 
                   className="form-input" 
@@ -221,7 +282,7 @@ export default function CategoriesManager() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Cover Image URL *</label>
+                <label className="form-label">{t.coverUrlLabel}</label>
                 <input 
                   type="text" 
                   className="form-input" 
@@ -233,7 +294,7 @@ export default function CategoriesManager() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Display Order</label>
+                <label className="form-label">{t.displayOrderLabel}</label>
                 <input 
                   type="number" 
                   className="form-input" 
@@ -249,13 +310,13 @@ export default function CategoriesManager() {
                     checked={formData.isActive} 
                     onChange={e => setFormData({...formData, isActive: e.target.checked})}
                   />
-                  <span style={{ fontSize: '0.95rem' }}>Visible on Home Feed & Catalog</span>
+                  <span style={{ fontSize: '0.95rem' }}>{t.visibleLabel}</span>
                 </label>
               </div>
 
               <div className="form-actions">
-                <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">{editingId ? 'Save Changes' : 'Create Category'}</button>
+                <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>{t.cancel}</button>
+                <button type="submit" className="btn btn-primary">{editingId ? t.saveChanges : t.createCategory}</button>
               </div>
             </form>
           </div>

@@ -4,7 +4,98 @@ import { collection, onSnapshot, doc, updateDoc, Timestamp } from 'firebase/fire
 import { onAuthStateChanged } from 'firebase/auth';
 import { Store, Search, CheckCircle, XCircle, Clock, ExternalLink, CreditCard, Phone, Mail, User, Link2, Hash } from 'lucide-react';
 
-export default function SellerApplicationsManager() {
+const translations = {
+  en: {
+    title: "Seller Applications",
+    subtitle: "Review and manage seller partnership requests",
+    total: "Total",
+    pending: "Pending",
+    approved: "Approved",
+    rejected: "Rejected",
+    searchPlaceholder: "Search by name, email, or referral code...",
+    thApplicant: "Applicant",
+    thPlatform: "Platform",
+    thReferral: "Referral Code",
+    thApplied: "Applied",
+    thStatus: "Status",
+    thActions: "Actions",
+    noApplications: "No applications found.",
+    unknown: "Unknown",
+    review: "Review",
+    applicationReview: "Application Review",
+    personalInfo: "Personal Information",
+    fullName: "Full Name",
+    phone: "Phone",
+    email: "Email",
+    marketingChannels: "Marketing Channels",
+    platform: "Platform",
+    channelLink: "Channel Link",
+    referralCode: "Referral Code",
+    paymentDetails: "Payment Details",
+    bank: "Bank",
+    accountNumber: "Account #",
+    holderName: "Holder Name",
+    identification: "Identification",
+    citizenId: "Citizen ID",
+    taxId: "Tax ID",
+    approve: "Approve",
+    reject: "Reject",
+    rejectionReasonPlaceholder: "Rejection reason (required to reject)...",
+    rejectionReasonLabel: "Rejection Reason",
+    reviewedOn: "Reviewed on ",
+    alertApproveErr: "Failed to approve: ",
+    alertRejectErr: "Failed to reject: ",
+    alertReasonRequired: "Please provide a reason for rejection.",
+    statusPendingReview: "Pending Review"
+  },
+  vi: {
+    title: "Đăng Ký Đối Tác Bán Hàng",
+    subtitle: "Xem xét và quản lý các yêu cầu hợp tác bán hàng",
+    total: "Tất cả",
+    pending: "Chờ duyệt",
+    approved: "Đã duyệt",
+    rejected: "Đã từ chối",
+    searchPlaceholder: "Tìm theo tên, email, hoặc mã giới thiệu...",
+    thApplicant: "Người đăng ký",
+    thPlatform: "Nền tảng",
+    thReferral: "Mã giới thiệu",
+    thApplied: "Ngày đăng ký",
+    thStatus: "Trạng thái",
+    thActions: "Hành động",
+    noApplications: "Không tìm thấy hồ sơ đăng ký nào.",
+    unknown: "Chưa rõ",
+    review: "Xem hồ sơ",
+    applicationReview: "Chi Tiết Hồ Sơ Đăng Ký",
+    personalInfo: "Thông Tin Cá Nhân",
+    fullName: "Họ và tên",
+    phone: "Số điện thoại",
+    email: "Địa chỉ email",
+    marketingChannels: "Kênh Tiếp Thị",
+    platform: "Nền tảng chính",
+    channelLink: "Liên kết kênh",
+    referralCode: "Mã giới thiệu",
+    paymentDetails: "Thông Tin Thanh Toán",
+    bank: "Ngân hàng",
+    accountNumber: "Số tài khoản",
+    holderName: "Chủ tài khoản",
+    identification: "Giấy Tờ Định Danh",
+    citizenId: "Số CCCD",
+    taxId: "Mã số thuế",
+    approve: "Phê duyệt",
+    reject: "Từ chối",
+    rejectionReasonPlaceholder: "Lý do từ chối (bắt buộc khi từ chối)...",
+    rejectionReasonLabel: "Lý Do Từ Chối",
+    reviewedOn: "Đã duyệt vào lúc ",
+    alertApproveErr: "Không thể phê duyệt: ",
+    alertRejectErr: "Không thể từ chối: ",
+    alertReasonRequired: "Vui lòng nhập lý do từ chối hồ sơ.",
+    statusPendingReview: "Chờ xem xét"
+  }
+};
+
+export default function SellerApplicationsManager({ locale = 'en' }) {
+  const t = translations[locale] || translations.en;
+
   const [applications, setApplications] = useState([]);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
@@ -63,14 +154,14 @@ export default function SellerApplicationsManager() {
       });
       setSelectedApp(null);
     } catch (e) {
-      alert('Failed to approve: ' + e.message);
+      alert(t.alertApproveErr + e.message);
     }
-    setProcessing(false);
+    setProcessing(true);
   };
 
   const handleReject = async (app) => {
     if (!rejectionReason.trim()) {
-      alert('Please provide a reason for rejection.');
+      alert(t.alertReasonRequired);
       return;
     }
     setProcessing(true);
@@ -84,16 +175,16 @@ export default function SellerApplicationsManager() {
       setSelectedApp(null);
       setRejectionReason('');
     } catch (e) {
-      alert('Failed to reject: ' + e.message);
+      alert(t.alertRejectErr + e.message);
     }
     setProcessing(false);
   };
 
   const statusBadge = (status) => {
     const config = {
-      pending: { bg: 'rgba(255,152,0,0.12)', color: '#FF9800', label: 'Pending Review', Icon: Clock },
-      approved: { bg: 'rgba(76,175,80,0.12)', color: '#4CAF50', label: 'Approved', Icon: CheckCircle },
-      rejected: { bg: 'rgba(244,67,54,0.12)', color: '#F44336', label: 'Rejected', Icon: XCircle },
+      pending: { bg: 'rgba(255,152,0,0.12)', color: '#FF9800', label: t.statusPendingReview, Icon: Clock },
+      approved: { bg: 'rgba(76,175,80,0.12)', color: '#4CAF50', label: t.approved, Icon: CheckCircle },
+      rejected: { bg: 'rgba(244,67,54,0.12)', color: '#F44336', label: t.rejected, Icon: XCircle },
     };
     const c = config[status] || config.pending;
     return (
@@ -105,16 +196,16 @@ export default function SellerApplicationsManager() {
 
   const formatDate = (ts) => {
     if (!ts?.toDate) return '—';
-    return ts.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    return ts.toDate().toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
   return (
     <div>
       <div className="header-bar">
         <div>
-          <h1 className="page-title">Seller Applications</h1>
+          <h1 className="page-title">{t.title}</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
-            Review and manage seller partnership requests
+            {t.subtitle}
           </p>
         </div>
       </div>
@@ -122,10 +213,10 @@ export default function SellerApplicationsManager() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
         {[
-          { key: 'all', label: 'Total', color: 'var(--text-primary)', icon: Store },
-          { key: 'pending', label: 'Pending', color: '#FF9800', icon: Clock },
-          { key: 'approved', label: 'Approved', color: '#4CAF50', icon: CheckCircle },
-          { key: 'rejected', label: 'Rejected', color: '#F44336', icon: XCircle },
+          { key: 'all', label: t.total, color: 'var(--text-primary)', icon: Store },
+          { key: 'pending', label: t.pending, color: '#FF9800', icon: Clock },
+          { key: 'approved', label: t.approved, color: '#4CAF50', icon: CheckCircle },
+          { key: 'rejected', label: t.rejected, color: '#F44336', icon: XCircle },
         ].map(s => (
           <div key={s.key}
             className="glass-panel"
@@ -148,7 +239,7 @@ export default function SellerApplicationsManager() {
         <Search size={20} color="var(--text-muted)" />
         <input
           type="text"
-          placeholder="Search by name, email, or referral code..."
+          placeholder={t.searchPlaceholder}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', width: '100%', outline: 'none', fontSize: '0.95rem' }}
@@ -160,19 +251,19 @@ export default function SellerApplicationsManager() {
         <table className="rich-table">
           <thead>
             <tr>
-              <th>Applicant</th>
-              <th>Platform</th>
-              <th>Referral Code</th>
-              <th>Applied</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th>{t.thApplicant}</th>
+              <th>{t.thPlatform}</th>
+              <th>{t.thReferral}</th>
+              <th>{t.thApplied}</th>
+              <th>{t.thStatus}</th>
+              <th>{t.thActions}</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
                 <td colSpan="6" style={{ textAlign: 'center', padding: '32px', color: 'var(--text-muted)' }}>
-                  No applications found.
+                  {t.noApplications}
                 </td>
               </tr>
             ) : (
@@ -188,7 +279,7 @@ export default function SellerApplicationsManager() {
                         </div>
                       )}
                       <div>
-                        <span style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{app.fullName || 'Unknown'}</span>
+                        <span style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{app.fullName || t.unknown}</span>
                         <br />
                         <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{app.email}</span>
                       </div>
@@ -212,7 +303,7 @@ export default function SellerApplicationsManager() {
                       style={{ fontSize: '0.85rem', padding: '6px 14px' }}
                       onClick={() => { setSelectedApp(app); setRejectionReason(''); }}
                     >
-                      Review
+                      {t.review}
                     </button>
                   </td>
                 </tr>
@@ -231,33 +322,33 @@ export default function SellerApplicationsManager() {
               style={{ position: 'absolute', top: '16px', right: '16px', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.2rem' }}
             >✕</button>
 
-            <h2 style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '4px' }}>Application Review</h2>
+            <h2 style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '4px' }}>{t.applicationReview}</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '24px' }}>{statusBadge(selectedApp.status)}</p>
 
             {/* Personal Info */}
-            <SectionTitle icon={User} title="Personal Information" />
-            <DetailRow icon={User} label="Full Name" value={selectedApp.fullName} />
-            <DetailRow icon={Phone} label="Phone" value={selectedApp.phone} />
-            <DetailRow icon={Mail} label="Email" value={selectedApp.email} />
+            <SectionTitle icon={User} title={t.personalInfo} />
+            <DetailRow icon={User} label={t.fullName} value={selectedApp.fullName} />
+            <DetailRow icon={Phone} label={t.phone} value={selectedApp.phone} />
+            <DetailRow icon={Mail} label={t.email} value={selectedApp.email} />
 
             {/* Marketing */}
-            <SectionTitle icon={Link2} title="Marketing Channels" />
-            <DetailRow icon={Store} label="Platform" value={selectedApp.mainPlatform} />
-            <DetailRow icon={ExternalLink} label="Channel Link" value={selectedApp.channelLink} isLink />
-            <DetailRow icon={Hash} label="Referral Code" value={selectedApp.referralCode} highlight />
+            <SectionTitle icon={Link2} title={t.marketingChannels} />
+            <DetailRow icon={Store} label={t.platform} value={selectedApp.mainPlatform} />
+            <DetailRow icon={ExternalLink} label={t.channelLink} value={selectedApp.channelLink} isLink />
+            <DetailRow icon={Hash} label={t.referralCode} value={selectedApp.referralCode} highlight />
 
             {/* Payment */}
-            <SectionTitle icon={CreditCard} title="Payment Details" />
-            <DetailRow icon={CreditCard} label="Bank" value={selectedApp.bankName} />
-            <DetailRow icon={CreditCard} label="Account #" value={selectedApp.accountNumber} />
-            <DetailRow icon={User} label="Holder Name" value={selectedApp.accountHolderName} />
+            <SectionTitle icon={CreditCard} title={t.paymentDetails} />
+            <DetailRow icon={CreditCard} label={t.bank} value={selectedApp.bankName} />
+            <DetailRow icon={CreditCard} label={t.accountNumber} value={selectedApp.accountNumber} />
+            <DetailRow icon={User} label={t.holderName} value={selectedApp.accountHolderName} />
 
             {/* ID */}
             {(selectedApp.citizenId || selectedApp.taxId) && (
               <>
-                <SectionTitle icon={User} title="Identification" />
-                <DetailRow icon={User} label="Citizen ID" value={selectedApp.citizenId || '—'} />
-                <DetailRow icon={Hash} label="Tax ID" value={selectedApp.taxId || '—'} />
+                <SectionTitle icon={User} title={t.identification} />
+                <DetailRow icon={User} label={t.citizenId} value={selectedApp.citizenId || '—'} />
+                <DetailRow icon={Hash} label={t.taxId} value={selectedApp.taxId || '—'} />
               </>
             )}
 
@@ -275,7 +366,7 @@ export default function SellerApplicationsManager() {
                       opacity: processing ? 0.6 : 1,
                     }}
                   >
-                    <CheckCircle size={16} /> Approve
+                    <CheckCircle size={16} /> {t.approve}
                   </button>
                   <button
                     disabled={processing}
@@ -287,11 +378,11 @@ export default function SellerApplicationsManager() {
                       opacity: processing ? 0.6 : 1,
                     }}
                   >
-                    <XCircle size={16} /> Reject
+                    <XCircle size={16} /> {t.reject}
                   </button>
                 </div>
                 <textarea
-                  placeholder="Rejection reason (required to reject)..."
+                  placeholder={t.rejectionReasonPlaceholder}
                   value={rejectionReason}
                   onChange={(e) => setRejectionReason(e.target.value)}
                   rows={3}
@@ -307,14 +398,14 @@ export default function SellerApplicationsManager() {
 
             {selectedApp.status === 'rejected' && selectedApp.rejectionReason && (
               <div style={{ marginTop: '20px', padding: '14px', borderRadius: '10px', background: 'rgba(244,67,54,0.08)', border: '1px solid rgba(244,67,54,0.2)' }}>
-                <p style={{ fontSize: '0.8rem', color: '#F44336', fontWeight: '600', marginBottom: '4px' }}>Rejection Reason</p>
+                <p style={{ fontSize: '0.8rem', color: '#F44336', fontWeight: '600', marginBottom: '4px' }}>{t.rejectionReasonLabel}</p>
                 <p style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>{selectedApp.rejectionReason}</p>
               </div>
             )}
 
             {selectedApp.status !== 'pending' && (
               <p style={{ marginTop: '16px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                Reviewed on {formatDate(selectedApp.reviewedAt)}
+                {t.reviewedOn} {formatDate(selectedApp.reviewedAt)}
               </p>
             )}
           </div>
