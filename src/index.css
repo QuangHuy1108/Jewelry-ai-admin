@@ -1,20 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 :root {
-  --bg-base: #0b0b0d;
-  --bg-surface: #141416;
-  --bg-surface-hover: #1f1f23;
-  --bg-glass: rgba(20, 20, 22, 0.75);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-color-hover: rgba(212, 175, 55, 0.3);
+  --bg-base: #0A0A0B; /* Obsidian Black */
+  --bg-surface: #111113; /* Deep Obsidian Slate */
+  --bg-surface-hover: #1c1c1f;
+  --bg-glass: rgba(10, 10, 11, 0.2); /* Opacity 0.2 per Performance Guard Rule */
+  --border-color: rgba(212, 175, 55, 0.12); /* Thin Champagne Gold Hairline */
+  --border-color-hover: rgba(212, 175, 55, 0.35);
   
-  --text-primary: #f4f4f5;
+  --text-primary: #e4e4e7; /* High-contrast silver-gray */
   --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
+  --text-muted: #52525b;
   
-  --gold-primary: #D4AF37;
-  --gold-glow: rgba(212, 175, 55, 0.2);
-  --gold-gradient: linear-gradient(135deg, #F3E7E9 0%, #D4AF37 100%);
+  --gold-primary: #D4AF37; /* Champagne Gold */
+  --gold-glow: rgba(212, 175, 55, 0.15);
+  --gold-gradient: linear-gradient(135deg, #FFF6D6 0%, #D4AF37 50%, #A37E1C 100%);
   
   --accent-blue: #3b82f6;
   --accent-green: #10b981;
@@ -57,15 +57,23 @@ body {
 }
 
 /* Premium Layout Utilites */
+/* Premium Layout Utilities */
 .app-container {
   display: flex;
   min-height: 100vh;
-  background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.05), transparent 40%), var(--bg-base);
+  background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.04), transparent 45%), var(--bg-base);
+}
+
+h1, h2, h3, h4, h5, h6, .page-title, .brand-title, .modal-title {
+  font-family: 'Playfair Display', 'Outfit', serif;
+  letter-spacing: -0.01em;
 }
 
 .sidebar {
   width: var(--sidebar-width);
-  background: var(--bg-surface);
+  background: var(--bg-glass); /* Performance Guard Rule: Glassmorphism strictly allowed on Sidebar */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
@@ -88,18 +96,18 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #27272a, #141416);
+  background: linear-gradient(135deg, #1c1c1f, #0A0A0B);
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--border-color-hover);
-  box-shadow: 0 0 15px var(--gold-glow);
+  box-shadow: 0 0 12px var(--gold-glow);
 }
 
 .brand-title {
   font-size: 1.25rem;
   font-weight: 700;
-  background: linear-gradient(to right, #fff, var(--gold-primary));
+  background: linear-gradient(to right, #ffffff, var(--gold-primary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -121,17 +129,18 @@ body {
   color: var(--text-secondary);
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .nav-item:hover {
   color: var(--text-primary);
   background: var(--bg-surface-hover);
+  border-left: 2px solid rgba(212, 175, 55, 0.4);
 }
 
 .nav-item.active {
   color: var(--gold-primary);
-  background: linear-gradient(90deg, rgba(212, 175, 55, 0.1), transparent);
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.08), transparent);
   border-left: 3px solid var(--gold-primary);
   font-weight: 600;
 }
@@ -143,20 +152,19 @@ body {
   max-width: calc(100vw - var(--sidebar-width));
 }
 
-/* Glassmorphism Cards */
+/* Obsidian Content Panels (Performance Guard Rule: Solid Obsidian, no backdrop-filter to prevent GPU lag) */
 .glass-panel {
-  background: var(--bg-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-color);
+  background: #0A0A0B; /* Solid Obsidian Canvas */
+  border: 1px solid var(--border-color); /* Thin Gold Hairline */
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .glass-panel:hover {
   border-color: var(--border-color-hover);
+  box-shadow: 0 4px 24px rgba(212, 175, 55, 0.08);
 }
 
 /* Grid Dashboards */
@@ -334,8 +342,9 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
+  background: rgba(10, 10, 11, 0.6); /* Performance Guard Rule: Glassmorphism strictly allowed on overlay backdrop */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: 100;
   display: flex;
   align-items: center;
@@ -344,7 +353,9 @@ body {
 }
 
 .modal-content {
-  background: var(--bg-surface);
+  background: rgba(17, 17, 19, 0.85); /* Performance Guard Rule: Glassmorphism strictly allowed on dialog boxes */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color-hover);
   border-radius: 20px;
   width: 100%;
@@ -352,7 +363,7 @@ body {
   max-height: 90vh;
   overflow-y: auto;
   padding: 32px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
   position: relative;
   animation: modalEnter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
