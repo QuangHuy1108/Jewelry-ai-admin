@@ -15,6 +15,7 @@ import Login from './components/Login';
 import ArMediaHub from './components/ArMediaHub';
 import AiCustomDesigns from './components/AiCustomDesigns';
 import VendorFinancials from './components/VendorFinancials';
+import LiveSupport from './components/LiveSupport';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('dashboard');
@@ -81,6 +82,8 @@ export default function App() {
         return <AiCustomDesigns />;
       case 'vendor-financials':
         return <VendorFinancials />;
+      case 'live-support':
+        return <LiveSupport />;
       default:
         return <DashboardStats />;
     }

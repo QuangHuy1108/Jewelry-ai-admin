@@ -10,7 +10,8 @@ import {
   Store,
   Box,
   Sparkles,
-  CreditCard
+  CreditCard,
+  MessageSquare
 } from 'lucide-react';
 
 export default function Sidebar({ currentTab, setCurrentTab, onLogout }) {
@@ -26,6 +27,7 @@ export default function Sidebar({ currentTab, setCurrentTab, onLogout }) {
     { id: 'ar-media-hub', label: 'AR & Media Hub', icon: Box },
     { id: 'ai-custom-designs', label: 'AI Custom Designs', icon: Sparkles },
     { id: 'vendor-financials', label: 'Vendor Financials', icon: CreditCard },
+    { id: 'live-support', label: 'Live Chat & Telemetry', icon: MessageSquare },
   ];
 
   return (
