@@ -246,10 +246,10 @@ export default function VendorFinancials() {
   const handleExportBankCSV = () => {
     const headers = ['Merchant Name', 'Bank Name', 'Account Number', 'Gross Sales ($)', 'Commission (%)', 'Platform Fee ($)', 'Net Payout ($)', 'Date'];
     const rows = sellersLedger.map(s => {
-      const gross = parseFloat(s.grossRevenue);
-      const rate = parseFloat(s.commissionRate);
-      const fee = gross * (rate / 100);
-      const net = gross - fee;
+      const gross = parseFloat(s.grossRevenue) || 0.0;
+      const rate = parseFloat(s.commissionRate) || 0.0;
+      const fee = calculateCommissionFee(gross, rate);
+      const net = calculateNetPayout(gross, rate);
       return [
         `"${s.name}"`,
         `"${s.bankName}"`,
@@ -274,18 +274,21 @@ export default function VendorFinancials() {
     document.body.removeChild(link);
   };
 
-  // --- Accurate Decimal Mathematical Calculations (Double Accuracy) ---
+  // --- Accurate Decimal Mathematical Calculations (High-Precision Floating-Point Safeguard) ---
   const calculateCommissionFee = (gross, rate) => {
     const grossNum = parseFloat(gross) || 0.0;
     const rateNum = parseFloat(rate) || 0.0;
-    return grossNum * (rateNum / 100.0);
+    // Enforce neat decimal rounding using cent-based integers to absolutely prevent IEEE 754 float drift currency errors
+    return Math.round((grossNum * (rateNum / 100.0)) * 100) / 100;
   };
 
   const calculateNetPayout = (gross, rate) => {
     const grossNum = parseFloat(gross) || 0.0;
     const fee = calculateCommissionFee(grossNum, rate);
-    return grossNum - fee;
+    // Secure subtraction with neat decimal rounding safeguard
+    return Math.round((grossNum - fee) * 100) / 100;
   };
+
 
   return (
     <div>
