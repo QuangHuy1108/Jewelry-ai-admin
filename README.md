@@ -12,19 +12,19 @@ The GlowUp platform is a cohesive, full-stack ecosystem consisting of four main 
 
 ```mermaid
 graph TD
-    subgraph Client Layer [Client Layer]
+    subgraph Client_Layer ["Client Layer"]
         App["📱 Flutter Client App<br>(iOS & Android)"]
         Admin["💻 React + Vite Admin Portal<br>(Web Webpage)"]
     end
 
-    subgraph Firebase Cloud Services [Firebase Cloud Services (Project: jewelry-ai-app-bba3d)]
+    subgraph Firebase_Cloud_Services ["Firebase Cloud Services (Project: jewelry-ai-app-bba3d)"]
         Auth["🔐 Firebase Authentication<br>(Role-based Access Control)"]
         DB[("🔥 Cloud Firestore<br>(Real-time Database)")]
         Storage[("📦 Cloud Storage<br>(Product Media & 3D GLB models)")]
         Funcs["⚡ Serverless Cloud Functions<br>(Commissions, Analytics, Push Schedulers)"]
     end
 
-    subgraph AI & Search Engine [AI & Search Engine]
+    subgraph AI_Search_Engine ["AI & Search Engine"]
         AIVision["🤖 Python FastAPI Service<br>(SentenceTransformer CLIP Engine)"]
         VectorDB[("🔍 Qdrant Vector DB<br>(Semantic Embeddings Store)")]
     end
